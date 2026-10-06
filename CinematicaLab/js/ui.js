@@ -35,6 +35,25 @@
     return it.cat === 'vertical' || it.unidad === '2.2' || /^V/i.test(String(it.genId || '')) ||
       /\beje\s+y\b|vertical|ca[ií]da libre|tiro vertical|globo/i.test(texto);
   }
+  function opcionesDiagrama(it, vertical) {
+    var d = (it && it.contenido && it.contenido.datos) || {};
+    var o = { orientacion: vertical ? 'vertical' : 'horizontal', aSign: vertical ? -1 : 1 };
+    if (!vertical) return o;
+    if (it.genId === 'V8_globo_y_gomera' || (d.h0 !== undefined && d.h1 !== undefined && d.vb !== undefined && d.v0 !== undefined)) {
+      o.objetos = [
+        { etiqueta: 'globo', altura: d.h0, vSign: 1, color: 'var(--acento)' },
+        { etiqueta: 'piedra', altura: d.h1, vSign: 1, color: 'var(--alerta)' }
+      ];
+      o.datosClave = ['h globo = ' + f(d.h0, 0) + ' m · v globo = +' + f(d.vb, 0) + ' m/s',
+        'h piedra = ' + f(d.h1) + ' m · v₀ piedra = +' + f(d.v0, 0) + ' m/s · g = ' + f(state.sesion && state.sesion.g) + ' m/s²'];
+    } else {
+      var altura = d.H !== undefined ? d.H : (d.h0 !== undefined ? d.h0 : undefined);
+      if (altura !== undefined) o.altura = altura;
+      if (d.v0 !== undefined) o.datosClave = ['y₀ = ' + f(altura === undefined ? 0 : altura, 0) + ' m · v₀ᵧ = ' + f(d.v0) + ' m/s · g = ' + f(state.sesion && state.sesion.g) + ' m/s²'];
+      else if (d.vB !== undefined) o.datosClave = ['y₀ = ' + f(altura === undefined ? 0 : altura, 0) + ' m · v₀ᵧ = ' + f(d.vB) + ' m/s · g = ' + f(state.sesion && state.sesion.g) + ' m/s²'];
+    }
+    return o;
+  }
 
   /* ================================================================== */
   /* Persistencia de la sesión en curso                                  */
@@ -306,7 +325,7 @@
         '<span class="dif">Dificultad ' + it.dif + '/3</span>' +
         '</header>' +
         '<div class="enunciado">' + it.contenido.enunciado + '</div>' +
-        '<div class="grafico-caja">' + FIS.diagramaPictorico(it.contenido.titulo, 'situación del enunciado', movimientoVertical ? 'eje Y vertical, positivo hacia arriba' : 'eje X horizontal, positivo hacia la derecha', movimientoVertical ? 'El esquema representa el eje físico Y: el piso es el origen, la altura crece hacia arriba y la gravedad apunta hacia abajo.' : 'El esquema representa el eje físico X: el origen queda a la izquierda y las flechas siguen los signos del movimiento.', { orientacion: movimientoVertical ? 'vertical' : 'horizontal', aSign: movimientoVertical ? -1 : 1 }) + '</div>' +
+        '<div class="grafico-caja">' + FIS.diagramaPictorico(it.contenido.titulo, 'situación del enunciado', movimientoVertical ? 'eje Y vertical, positivo hacia arriba' : 'eje X horizontal, positivo hacia la derecha', movimientoVertical ? 'El esquema representa el eje físico Y: los objetos están ubicados sobre la misma vertical, el piso es el origen, la altura crece hacia arriba y la gravedad apunta hacia abajo.' : 'El esquema representa el eje físico X: el origen queda a la izquierda y las flechas siguen los signos del movimiento.', opcionesDiagrama(it, movimientoVertical)) + '</div>' +
         (it.contenido.grafico ? '<div class="grafico-caja">' + it.contenido.grafico + '</div>' : '') +
         (interSpec ? '<div id="explorador-interactivo">' + FIS.interactivoHTML(interSpec, interState.t, interState.modo) + '</div>' : '') +
         '<div class="incisos">' + incisos + '</div>' +
