@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>Catálogo</title></head>
+<body><pre id="s">GENERADORES: 23
+
+## horizontal — MRUV horizontal (Unidad 2.1) (10)
+H1_ecuacion_horaria | dif 2 | Ecuación horaria: frenada, retroceso y distancia recorrida | Ecuaciones horarias del MRUV | A partir de x(t) calcular el instante de detención, posiciones, desplazamiento y longitud de trayectoria.
+H2_mruv_directo | dif 1 | Movimiento uniformemente acelerado: posición, velocidad y ecuación complementaria | Ecuaciones horarias del MRUV | Datos x0, v0 y a constantes; calcular posición, velocidad, y dónde alcanza cierta velocidad.
+H3_frenado | dif 1 | Distancia y tiempo de frenado (con tiempo de reacción) | Frenado y distancia de detención | Conversión de unidades, tiempo de detención, distancia de frenado y distancia total con tiempo de reacción.
+H4_dos_superficies | dif 2 | Comparación de distancias de frenado en distintas superficies | Frenado y distancia de detención | Comparar la distancia de detención sobre hormigón seco y húmedo e interpretar el efecto del tiempo de reacción.
+H5_encuentro_mru_mru | dif 1 | Encuentro entre dos móviles con velocidad constante | Encuentros y persecuciones | Persecución (mismo sentido) o cruce frontal (sentidos opuestos) entre dos móviles de velocidad constante.
+H6_encuentro_mruv_mruv | dif 3 | Alcance entre dos móviles uniformemente variados | Encuentros y persecuciones | Dos móviles con aceleraciones distintas sobre el mismo eje: instante, posición y velocidades en el encuentro.
+H7_arranque_tras_camion | dif 2 | Un móvil que arranca desde el reposo y alcanza a otro con velocidad constante | Encuentros y persecuciones | MRU contra MRUV: un vehículo detenido arranca y persigue a otro que pasa con velocidad constante (con retardo).
+H8_frena_y_vuelve | dif 3 | Movimiento con cambio de sentido: rapidez nula, regreso e instantes en una posición | Cambio de sentido y ecuación complementaria | El móvil pasa por A con cierta velocidad y aceleración contraria: tiempo hasta detenerse, distancia, regreso e instantes en una posición.
+H9_grafico_vt_tramos | dif 2 | Gráfico v = f(t) por tramos: desplazamiento, distancia y aceleraciones | Interpretación de gráficos | Interpreta un gráfico v-t poligonal: áreas (desplazamiento y distancia), aceleración por tramo y cambio de sentido.
+H10_signos_grafico | dif 2 | Lectura de signos y concavidad en la gráfica x(t) | Interpretación de gráficos | Determina los signos de posición, velocidad y aceleración en t = 0 y el carácter acelerado/desacelerado del movimiento.
+
+## vertical — Movimientos verticales (Unidad 2.2) (12)
+V1_caida_libre_basica | dif 1 | Caída libre: tiempo, rapidez y altura en un instante | Caída libre | Se suelta un cuerpo desde una altura conocida: tiempo de caída, rapidez de llegada y valores intermedios.
+V2_caida_ultimos_metros | dif 2 | Caída libre: último segundo y últimos metros | Caída libre | Distancia recorrida en el último segundo de caída y tiempo empleado en recorrer los últimos metros.
+V3_tiro_vertical_basico | dif 1 | Tiro vertical: altura máxima, tiempos y vuelo completo | Tiro vertical | Proyectil lanzado verticalmente hacia arriba: altura máxima, tiempo de subida, vuelo total y velocidad de regreso.
+V4_tiro_vertical_desde_altura | dif 2 | Tiro vertical desde una altura: altura máxima, regreso y choque con el piso | Tiro vertical | Lanzamiento hacia arriba desde un edificio: altura máxima sobre el piso, tiempo de regreso al punto de partida y tiempo/rapidez de llegada al suelo.
+V5_encuentro_vertical | dif 2 | Cruce de dos piedras (una hacia arriba y otra hacia abajo) | Encuentros verticales | Dos cuerpos lanzados simultáneamente en sentidos opuestos: instante y altura de cruce, y rapideces en ese instante.
+V6_globo_suelta_objeto | dif 2 | Objeto que se deja caer desde un globo en movimiento | Caída y lanzamiento desde un móvil | Al soltarse, el cuerpo conserva la velocidad del globo: altura máxima, tiempo de caída, rapidez de impacto y distancia recorrida.
+V7_bulto_montacargas | dif 2 | Bulto que cae de un montacargas en movimiento | Caída y lanzamiento desde un móvil | El bulto que cae de un ascensor en movimiento sube primero: tiempo hasta la altura máxima, altura de caída y distancia recorrida.
+V8_globo_y_gomera | dif 3 | Globo ascendente alcanzado por una piedra (dos encuentros) | Encuentros verticales | Persecución vertical en el aire: primer y segundo encuentro entre un globo que sube a velocidad constante y una piedra lanzada desde el piso.
+V9_malabarista | dif 2 | Dos clavas que se cruzan (lanzamiento retardado) | Encuentros verticales | Velocidad necesaria para llegar al techo, tiempo de ascenso y cruce entre dos objetos lanzados con retardo.
+V10_dos_tiempos_misma_altura | dif 3 | Cuerpo que pasa por la misma altura en dos instantes | Tiro vertical | Conociendo dos instantes en que el cuerpo pasa por la misma altura, hallar la velocidad en el punto de paso, esa altura y la altura máxima.
+V12_dos_proyectiles_retardo | dif 3 | Proyectil que es alcanzado por otro soltado después | Encuentros verticales | El primero se lanza hacia arriba y el segundo se deja caer desde el mismo punto varios segundos después: se cruzan en el aire.
+V13_encuentro_torre_y_suelo | dif 3 | Encuentro entre un proyectil lanzado desde el suelo y otro desde una torre | Encuentros verticales | Determina si hay encuentro entre dos proyectiles lanzados hacia arriba desde alturas distintas y calcula instante y altura.
+
+## mixto — Composición caída libre + MRU (1)
+V11_pelota_canasta | dif 3 | Dejar caer una pelota dentro de una canasta en movimiento | Composición: caída libre y MRU | Combina una caída libre vertical con el MRU horizontal de la compañera que lleva la canasta.
+
+## teorico — Teórico: Verdadero/Falso con justificación (0)
+
+TEÓRICOS: 28
+T_vacio_gravedad | u2.2 | dif 1 | variantes: 1
+   ej: En el vacío no hay gravedad.
+T_aceleracion_cambia_signo | u2.2 | dif 2 | variantes: 1
+   ej: En un tiro vertical hacia arriba, el movimiento es primero desacelerado y luego acelerado, entonces la aceleración cambia de signo.
+T_pluma_piedra_tubo | u2.2 | dif 1 | variantes: 1
+   ej: Si se sueltan una pluma y una piedra dentro de un tubo en cuyo interior se hizo vacío, ambos objetos caen a la par.
+T_v_cero_a_distinta | u2.1 | dif 2 | variantes: 1
+   ej: Hay casos en que la velocidad es cero y la aceleración es distinta de cero.
+T_mitad_tiempo_mitad_altura | u2.2 | dif 2 | variantes: 1
+   ej: En un tiro vertical hacia arriba, en la mitad del tiempo que tarda en subir llega a la mitad de la altura máxima.
+T_mitad_tiempo_mitad_velocidad | u2.2 | dif 2 | variantes: 1
+   ej: En un tiro vertical hacia arriba, en la mitad del tiempo que tarda en subir, tiene la mitad de la velocidad inicial.
+T_vector_regreso | u2.2 | dif 2 | variantes: 1
+   ej: En un tiro vertical hacia arriba desde el suelo, el vector velocidad inicial es igual al vector velocidad cuando vuelve al suelo.
+T_misma_altura_primer_ultimo_segundo | u2.2 | dif 3 | variantes: 1
+   ej: En un tiro vertical hacia arriba, en el primer segundo de subida el cuerpo recorre la misma distancia que en el último segundo de subida.
+T_depende_del_movil | u2.2 | dif 2 | variantes: 1
+   ej: Un estudiante afirma que el signo de g debe ser siempre negativo porque el objeto es lanzado hacia arriba; su compañera dice que debe ser siempre positivo. ¿Es correcta alguna de las dos posturas?
+T_aceleracion_g_no_masa | u2.2 | dif 1 | variantes: 1
+   ej: Dos cuerpos de distinta masa, soltados desde la misma altura en el vacío, llegan al piso con distintas rapideces porque el más pesado es atraído con más fuerza.
+T_area_at | u2.1 | dif 1 | variantes: 1
+   ej: El área encerrada por el gráfico a = f(t) entre dos instantes es numéricamente igual a la variación de velocidad en ese intervalo.
+T_pendiente_vt | u2.1 | dif 1 | variantes: 1
+   ej: En el gráfico v = f(t) de un MRUV, la pendiente de la recta es igual a la componente x de la aceleración.
+T_area_vt_desplazamiento | u2.1 | dif 2 | variantes: 1
+   ej: Si el área neta bajo el gráfico v = f(t) en un intervalo es cero, entonces el móvil permaneció detenido durante todo el intervalo.
+T_desaceleracion_signos | u2.1 | dif 2 | variantes: 1
+   ej: Un móvil con velocidad y aceleración de signos opuestos está frenando (disminuye su rapidez).
+T_grafico_xt_curvo | u2.1 | dif 2 | variantes: 1
+   ej: Si el gráfico x = f(t) de un móvil es una curva (parábola), entonces su trayectoria es curva.
+T_cruce_misma_velocidad | u2.1 | dif 2 | variantes: 1
+   ej: Cuando dos móviles se cruzan en una ruta, necesariamente tienen la misma velocidad en ese instante.
+T_mruv_a_constante | u2.1 | dif 1 | variantes: 1
+   ej: En un MRUV la aceleración es constante, por lo que el móvil siempre aumenta su rapidez.
+T_trayectoria_recta_cl | u2.2 | dif 1 | variantes: 1
+   ej: La caída libre y el tiro vertical son casos particulares de MRUV en los que la aceleración es la gravitatoria.
+T_distancia_vs_desplazamiento | u2.1 | dif 3 | variantes: 1
+   ej: Explicá con tus palabras la diferencia entre la distancia recorrida (longitud de trayectoria) y la componente del desplazamiento, e ilustrá con un ejemplo de un móvil con MRUV.
+T_vacio_tubo_newton | u2.2 | dif 1 | variantes: 1
+   ej: En el vacío, dos cuerpos soltados desde la misma altura tardan el mismo tiempo en caer sólo si tienen la misma forma.
+T_num_altura_maxima | u2.2 | dif 2 | variantes: 14
+   ej: En un tiro vertical lanzado desde el piso con rapidez inicial de 25 m/s (g = 9,81 m/s²), el cuerpo alcanza una altura máxima de 63,7 m.
+   ej: En un tiro vertical lanzado desde el piso con rapidez inicial de 25 m/s (g = 9,81 m/s²), el cuerpo alcanza una altura máxima de 47,8 m.
+T_num_distancia_primer_segundo | u2.1 | dif 2 | variantes: 8
+   ej: Un móvil que parte del reposo con aceleración constante de 5 m/s² recorre 5 m durante el primer segundo.
+   ej: Un móvil que parte del reposo con aceleración constante de 6 m/s² recorre 6 m durante el primer segundo.
+T_num_rapidez_impacto | u2.2 | dif 2 | variantes: 11
+   ej: Un cuerpo que cae libremente desde 80 m de altura llega al piso con una rapidez de 79,2 m/s (g = 9,81 m/s²).
+   ej: Un cuerpo que cae libremente desde 125 m de altura llega al piso con una rapidez de 74,3 m/s (g = 9,81 m/s²).
+T_num_tiempo_caida | u2.2 | dif 2 | variantes: 10
+   ej: Un cuerpo soltado desde 125 m de altura tarda 3,6 s en llegar al piso (g = 9,81 m/s²).
+   ej: Un cuerpo soltado desde 180 m de altura tarda 4,3 s en llegar al piso (g = 9,81 m/s²).
+T_num_encuentro_mru | u2.1 | dif 2 | variantes: 60
+   ej: Un auto que va a 23 m/s es perseguido por otro que va a 31 m/s, 150 m más atrás. Se encuentran a los 37,5 s.
+   ej: Un auto que va a 21 m/s es perseguido por otro que va a 27 m/s, 170 m más atrás. Se encuentran a los 3,54 s.
+T_num_encuentro_vertical | u2.2 | dif 3 | variantes: 60
+   ej: Una piedra se lanza hacia arriba a 14 m/s y simultáneamente otra se lanza hacia abajo desde 30 m más arriba con 13 m/s. Se cruzan a los 1,67 s.
+   ej: Una piedra se lanza hacia arriba a 12 m/s y simultáneamente otra se lanza hacia abajo desde 33 m más arriba con 10 m/s. Se cruzan a los 2,59 s.
+T_num_area_vt | u2.1 | dif 2 | variantes: 59
+   ej: Un móvil con v₀ₓ = 15 m/s y aₓ = 4 m/s² recorre en los primeros 7 s una distancia de 98 m.
+   ej: Un móvil con v₀ₓ = 17 m/s y aₓ = 3 m/s² recorre en los primeros 6 s una distancia de 102 m.
+T_num_regreso_a_punto | u2.1 | dif 3 | variantes: 50
+   ej: Un móvil que pasa por un punto A con rapidez de 16 m/s e inmediatamente frena con aceleración de módulo 4 m/s² vuelve a pasar por A (en sentido contrario) y para entonces ha recorrido una distancia total de 32 m.
+   ej: Un móvil que pasa por un punto A con rapidez de 17 m/s e inmediatamente frena con aceleración de módulo 2,5 m/s² vuelve a pasar por A (en sentido contrario) y para entonces ha recorrido una distancia total de 57,8 m.</pre>
+<script src="../js/core.js"></script>
+<script src="../js/gen_horizontal.js"></script>
+<script src="../js/gen_vertical.js"></script>
+<script src="../js/gen_teorico.js"></script>
+<script src="../js/sesion.js"></script>
+<script>
+var L = [];
+L.push('GENERADORES: ' + FIS.generadores.length);
+FIS.categorias.forEach(function (c) {
+  var lista = FIS.generadores.filter(function (g) { return g.cat === c.id; });
+  L.push('');
+  L.push('## ' + c.id + ' — ' + c.nombre + ' (' + lista.length + ')');
+  lista.forEach(function (g) {
+    L.push(g.id + ' | dif ' + g.dif + ' | ' + g.nombre + ' | ' + g.tema + ' | ' + g.desc);
+  });
+});
+L.push('');
+L.push('TEÓRICOS: ' + FIS.bancoTeorico.length);
+FIS.bancoTeorico.forEach(function (t) {
+  var muestras = [], n = 0;
+  for (var i = 0; i < 60; i++) {
+    var c = t.gen(FIS.makeRng(31 + i * 977), 9.81);
+    var tex = c.afirmacion;
+    if (muestras.indexOf(tex) < 0) muestras.push(tex);
+    n++;
+  }
+  L.push(t.id + ' | u' + t.unidad + ' | dif ' + t.dif + ' | variantes: ' + muestras.length);
+  L.push('   ej: ' + muestras[0]);
+  if (muestras[1]) L.push('   ej: ' + muestras[1]);
+});
+document.getElementById('s').textContent = L.join('\n');
+</script>
+</body></html>

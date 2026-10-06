@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Pruebas — Cinemática Lab</title>
+</head>
+<body>
+<pre id="salida">EJECUTANDO…</pre>
+<script src="../js/core.js"></script>
+<script src="../js/gen_horizontal.js"></script>
+<script src="../js/gen_vertical.js"></script>
+<script src="../js/gen_teorico.js"></script>
+<script src="../js/sesion.js"></script>
+<script>
+(function () {
+  var FIS = window.FIS;
+  var lineas = [], errores = [], advertencias = [];
+  var N = 150;
+  var g = 9.81;
+  try {
+
+  function log(s) { lineas.push(s); }
+  function fallo(msj) { errores.push(msj); }
+  function aviso(msj) { advertencias.push(msj); }
+
+  function cerca(a, b, tol) {
+    tol = tol || 1e-6;
+    if (!isFinite(a) || !isFinite(b)) return false;
+    return Math.abs(a - b) <= Math.max(tol, Math.abs(b) * tol);
+  }
+  function inc(prob, id) {
+    var r = null;
+    (prob.incisos || []).forEach(function (i) { if (i.id === id) r = i; });
+    return r;
+  }
+  /** Verifica un inciso numérico contra el valor calculado independientemente */
+  function chequearNum(prob, id, esperado, etiqueta, ctx) {
+    var i = inc(prob, id);
+    if (!i) { fallo(etiqueta + ': falta el inciso ' + id); return; }
+    if (i.tipo !== 'numero') { fallo(etiqueta + ': el inciso ' + id + ' debería ser numérico'); return; }
+    if (!cerca(i.valor, esperado, 1e-6)) {
+      fallo(etiqueta + ' · inciso ' + id + ': valor declarado ' + i.valor + ' ≠ calculado ' + esperado + ' [' + JSON.stringify(ctx) + ']');
+    }
+    if (!isFinite(i.valor)) fallo(etiqueta + ' · inciso ' + id + ': valor no finito');
+  }
+  function chequearVF(prob, id, esperado, etiqueta, ctx) {
+    var i = inc(prob, id);
+    if (!i) { fallo(etiqueta + ': falta el inciso ' + id); return; }
+    if (i.tipo !== 'vf') { fallo(etiqueta + ': el inciso ' + id + ' debería ser V/F'); return; }
+    if (i.valor !== esperado) fallo(etiqueta + ' · inciso ' + id + ': V/F declarado ' + i.valor + ' ≠ esperado ' + esperado + ' [' + JSON.stringify(ctx) + ']');
+  }
+  function chequearOpc(prob, id, esperado, etiqueta, ctx) {
+    var i = inc(prob, id);
+    if (!i || i.tipo !== 'opcion') { fallo(etiqueta + ': falta el inciso de opción ' + id); return; }
+    if (i.correcto !== esperado) fallo(etiqueta + ' · inciso ' + id + ': opción declarada ' + i.correcto + ' ≠ esperada ' + esperado + ' [' + JSON.stringify(ctx) + ']');
+  }
+
+  /* ============ verificadores por generador (física independiente) ============ */
+  var V = {
+
+    H1_ecuacion_horaria: function (p, d) {
+      var tDet = -d.v0 / d.a;
+      var x = function (t) { return d.x0 + d.v0 * t + 0.5 * d.a * t * t; };
+      chequearNum(p, 'a', tDet, 'H1', d);
+      chequearNum(p, 'b', x(d.t1), 'H1', d);
+      chequearNum(p, 'c', x(d.t2) - d.x0, 'H1', d);
+      var dist = Math.abs(x(tDet) - d.x0) + Math.abs(x(d.t2) - x(tDet));
+      chequearNum(p, 'd', dist, 'H1', d);
+      chequearVF(p, 'e', d.t2 > tDet, 'H1', d);
+    },
+
+    H2_mruv_directo: function (p, d) {
+      chequearNum(p, 'a', d.x0 + d.v0 * d.t + 0.5 * d.a * d.t * d.t, 'H2', d);
+      chequearNum(p, 'b', d.v0 + d.a * d.t, 'H2', d);
+      chequearNum(p, 'c', d.x0 + (d.vf * d.vf - d.v0 * d.v0) / (2 * d.a), 'H2', d);
+    },
+
+    H3_frenado: function (p, d) {
+      var v0 = d.kmh / 3.6;
+      chequearNum(p, 'a', v0, 'H3', d);
+      chequearNum(p, 'b', v0 / d.aStop, 'H3', d);
+      chequearNum(p, 'c', v0 * v0 / (2 * d.aStop), 'H3', d);
+      chequearNum(p, 'd', v0 * d.reaccion + v0 * v0 / (2 * d.aStop), 'H3', d);
+    },
+
+    H4_dos_superficies: function (p, d) {
+      chequearNum(p, 'a', d.v0 * d.v0 / (2 * d.aSeco), 'H4', d);
+      chequearNum(p, 'b', d.v0 * d.v0 / (2 * d.aHum), 'H4', d);
+      chequearNum(p, 'c', d.v0 * d.v0 / (2 * d.aHum) - d.v0 * d.v0 / (2 * d.aSeco), 'H4', d);
+      chequearNum(p, 'd', d.v0 * d.tr + d.v0 * d.v0 / (2 * d.aSeco), 'H4', d);
+    },
+
+    H5_encuentro_mru_mru: function (p, d) {
+      var t = d.persecucion ? d.d0 / (d.vB - d.vA) : d.d0 / (d.vA + d.vB);
+      chequearNum(p, 'a', t, 'H5', d);
+      var x1 = d.persecucion ? d.vB * t : d.vA * t;
+      chequearNum(p, 'b', x1, 'H5', d);
+      chequearNum(p, 'c', d.persecucion ? d.vB * t : d.vA * t, 'H5', d);
+      chequearNum(p, 'd', d.persecucion ? d.vA * t : d.vB * t, 'H5', d);
+      chequearVF(p, 'e', t < Math.round(t * 2), 'H5', d);
+      if (d.persecucion && d.vB <= d.vA) fallo('H5: persecución sin alcance ' + JSON.stringify(d));
+      if (!d.persecucion && t <= 0) fallo('H5: tiempo no positivo ' + JSON.stringify(d));
+    },
+
+    H6_encuentro_mruv_mruv: function (p, d) {
+      var A = 0.5 * (d.aA - d.aB), B = (d.vA - d.vB), C = d.d0;
+      var disc = B * B - 4 * A * C;
+      if (disc < 0) { fallo('H6: sin raíces reales ' + JSON.stringify(d)); return; }
+      var t = (-B + Math.sqrt(disc)) / (2 * A);
+      if (!(t > 0)) t = (-B - Math.sqrt(disc)) / (2 * A);
+      if (!(t > 0)) { fallo('H6: sin raíz positiva ' + JSON.stringify(d)); return; }
+      chequearNum(p, 'a', t, 'H6', d);
+      chequearNum(p, 'b', d.vB * t + 0.5 * d.aB * t * t, 'H6', d);
+      chequearNum(p, 'c', d.vB + d.aB * t, 'H6', d);
+      chequearNum(p, 'd', d.vA + d.aA * t, 'H6', d);
+      chequearVF(p, 'e', (d.vB + d.aB * t) > (d.vA + d.aA * t), 'H6', d);
+    },
+
+    H7_arranque_tras_camion: function (p, d) {
+      var A = 0.5 * d.a, B = -d.vC, C = -d.vC * d.retardo;
+      var disc = B * B - 4 * A * C;
+      var t = (-B + Math.sqrt(disc)) / (2 * A);
+      if (!(t > 0)) { fallo('H7: sin raíz positiva ' + JSON.stringify(d)); return; }
+      chequearNum(p, 'a', t, 'H7', d);
+      chequearNum(p, 'b', 0.5 * d.a * t * t, 'H7', d);
+      chequearNum(p, 'c', d.a * t, 'H7', d);
+    },
+
+    H8_frena_y_vuelve: function (p, d) {
+      chequearNum(p, 'a', d.v0 / d.a, 'H8', d);
+      chequearNum(p, 'b', d.v0 * d.v0 / (2 * d.a), 'H8', d);
+      chequearNum(p, 'c', 2 * d.v0 / d.a, 'H8', d);
+      var dPos = d.v0 * d.t1 - 0.5 * d.a * d.t1 * d.t1;
+      var dPos2 = d.v0 * d.t2 - 0.5 * d.a * d.t2 * d.t2;
+      if (!cerca(dPos, dPos2, 1e-6)) fallo('H8: los dos instantes no dan la misma posición ' + JSON.stringify(d));
+      chequearNum(p, 'd', d.t1, 'H8', d);
+      chequearNum(p, 'e', d.t2, 'H8', d);
+      var dMax = d.v0 * d.v0 / (2 * d.a);
+      chequearNum(p, 'f', dMax > d.lejos ? 1 : 0, 'H8', d);
+    },
+
+    H9_grafico_vt_tramos: function (p, d) {
+      var tr = d.tramos, area = 0, dist = 0;
+      tr.forEach(function (s) {
+        var a = 0.5 * (s.v0 + s.v1) * (s.t1 - s.t0);
+        area += a; dist += Math.abs(a);
+      });
+      chequearNum(p, 'a', area, 'H9', d);
+      chequearNum(p, 'b', dist, 'H9', d);
+      var ult = tr[tr.length - 1];
+      chequearNum(p, 'c', (ult.v1 - ult.v0) / (ult.t1 - ult.t0), 'H9', d);
+      chequearNum(p, 'd', d.t3, 'H9', d);
+      chequearVF(p, 'e', (ult.v1 < 0 && (ult.v1 - ult.v0) < 0) || (ult.v1 > 0 && (ult.v1 - ult.v0) > 0), 'H9', d);
+      if (area <= 0 && dist <= 0) fallo('H9: áreas nulas ' + JSON.stringify(d));
+    },
+
+    H10_signos_grafico: function (p, d) {
+      chequearOpc(p, 'a', d.x0 > 0 ? 0 : d.x0 < 0 ? 1 : 2, 'H10', d);
+      chequearOpc(p, 'b', d.v0 > 0 ? 0 : d.v0 < 0 ? 1 : 2, 'H10', d);
+      chequearOpc(p, 'c', d.a > 0 ? 0 : d.a < 0 ? 1 : 2, 'H10', d);
+      chequearOpc(p, 'd', (d.v0 * d.a) > 0 ? 0 : 1, 'H10', d);
+    },
+
+    V1_caida_libre_basica: function (p, d, gg) {
+      var tF = Math.sqrt(2 * d.H / gg), vF = Math.sqrt(2 * gg * d.H);
+      chequearNum(p, 'a', tF, 'V1', d);
+      chequearNum(p, 'b', vF, 'V1', d);
+      chequearNum(p, 'c', d.H - 0.5 * gg * d.t1 * d.t1, 'V1', d);
+      chequearNum(p, 'd', gg * d.t1, 'V1', d);
+    },
+
+    V2_caida_ultimos_metros: function (p, d, gg) {
+      var tF = Math.sqrt(2 * d.H / gg);
+      chequearNum(p, 'a', tF, 'V2', d);
+      chequearNum(p, 'b', 0.5 * gg * (2 * tF - 1), 'V2', d);
+      chequearNum(p, 'c', tF - Math.sqrt(2 * (d.H - d.dUlt) / gg), 'V2', d);
+      if (d.dUlt >= d.H) fallo('V2: dUlt >= H ' + JSON.stringify(d));
+    },
+
+    V3_tiro_vertical_basico: function (p, d, gg) {
+      var hMax = d.v0 * d.v0 / (2 * gg), tSub = d.v0 / gg;
+      chequearNum(p, 'a', hMax, 'V3', d);
+      chequearNum(p, 'b', tSub, 'V3', d);
+      chequearNum(p, 'c', d.v0 * d.t1 - 0.5 * gg * d.t1 * d.t1, 'V3', d);
+      chequearNum(p, 'd', 2 * tSub, 'V3', d);
+      chequearNum(p, 'e', 2 * hMax, 'V3', d);
+      chequearVF(p, 'f', false, 'V3', d);
+    },
+
+    V4_tiro_vertical_desde_altura: function (p, d, gg) {
+      var hRel = d.v0 * d.v0 / (2 * gg);
+      chequearNum(p, 'a', d.H + hRel, 'V4', d);
+      chequearNum(p, 'b', 2 * d.v0 / gg, 'V4', d);
+      var tSuelo = (d.v0 + Math.sqrt(d.v0 * d.v0 + 2 * gg * d.H)) / gg;
+      chequearNum(p, 'c', tSuelo, 'V4', d);
+      chequearNum(p, 'd', Math.sqrt(d.v0 * d.v0 + 2 * gg * d.H), 'V4', d);
+      chequearNum(p, 'e', 2 * hRel + d.H, 'V4', d);
+      if (!(tSuelo > 2 * d.v0 / gg)) fallo('V4: el tiempo al suelo debe superar el regreso ' + JSON.stringify(d));
+    },
+
+    V5_encuentro_vertical: function (p, d, gg) {
+      var t = d.H / (d.v1 + d.v2);
+      var y = d.v1 * t - 0.5 * gg * t * t;
+      chequearNum(p, 'a', t, 'V5', d);
+      chequearNum(p, 'b', y, 'V5', d);
+      chequearNum(p, 'c', Math.abs(d.v1 - gg * t), 'V5', d);
+      chequearNum(p, 'd', Math.abs(d.v2 + gg * t), 'V5', d);
+      if (!(y > 0 && y < d.H)) fallo('V5: cruce fuera del intervalo físico ' + JSON.stringify(d));
+    },
+
+    V6_globo_suelta_objeto: function (p, d, gg) {
+      var v0y = d.sube ? d.vB : -d.vB;
+      chequearNum(p, 'a', v0y, 'V6', d);
+      chequearNum(p, 'b', d.sube ? d.H + d.vB * d.vB / (2 * gg) : d.H, 'V6', d);
+      var tS = (-v0y + Math.sqrt(v0y * v0y + 2 * gg * d.H)) / gg;
+      chequearNum(p, 'c', tS, 'V6', d);
+      chequearNum(p, 'd', Math.sqrt(v0y * v0y + 2 * gg * d.H), 'V6', d);
+      chequearNum(p, 'e', d.sube ? 2 * d.vB * d.vB / (2 * gg) + d.H : d.H, 'V6', d);
+    },
+
+    V7_bulto_montacargas: function (p, d, gg) {
+      chequearNum(p, 'a', d.v / gg, 'V7', d);
+      var H = 0.5 * gg * d.tCaida * d.tCaida - d.v * d.tCaida;
+      chequearNum(p, 'b', H, 'V7', d);
+      chequearNum(p, 'c', H + d.v * 0.25 - 0.5 * gg * 0.0625, 'V7', d);
+      chequearNum(p, 'd', H + d.v * d.v / gg, 'V7', d);
+      if (!(H > 0)) fallo('V7: altura negativa ' + JSON.stringify(d));
+    },
+
+    V8_globo_y_gomera: function (p, d, gg) {
+      var A = 0.5 * gg, B = d.vb - d.v0, C = d.h0 - d.h1;
+      var disc = B * B - 4 * A * C;
+      if (disc <= 0) { fallo('V8: sin dos raíces ' + JSON.stringify(d)); return; }
+      var t1 = (-B - Math.sqrt(disc)) / (2 * A), t2 = (-B + Math.sqrt(disc)) / (2 * A);
+      chequearNum(p, 'a', t1, 'V8', d);
+      chequearNum(p, 'b', d.h0 + d.vb * t1, 'V8', d);
+      chequearNum(p, 'c', d.v0 - gg * t1, 'V8', d);
+      chequearNum(p, 'd', t2, 'V8', d);
+      chequearNum(p, 'e', d.h0 + d.vb * t2, 'V8', d);
+      if (!(t1 > 0 && t2 > t1)) fallo('V8: raíces no válidas ' + JSON.stringify(d));
+    },
+
+    V9_malabarista: function (p, d, gg) {
+      var v0 = Math.sqrt(2 * gg * d.h), T = v0 / gg;
+      chequearNum(p, 'a', v0, 'V9', d);
+      chequearNum(p, 'b', T, 'V9', d);
+      chequearNum(p, 'c', 0.5 * T, 'V9', d);
+      chequearNum(p, 'd', 0.75 * d.h, 'V9', d);
+    },
+
+    V10_dos_tiempos_misma_altura: function (p, d, gg) {
+      var vP = 0.5 * gg * (d.t1 + d.t2);
+      chequearNum(p, 'a', vP, 'V10', d);
+      chequearNum(p, 'b', vP * d.t1 - 0.5 * gg * d.t1 * d.t1, 'V10', d);
+      chequearNum(p, 'c', vP * vP / (2 * gg), 'V10', d);
+      chequearVF(p, 'd', false, 'V10', d);
+    },
+
+    V11_pelota_canasta: function (p, d, gg) {
+      var t = Math.sqrt(2 * (d.H - d.hCanasta) / gg);
+      chequearNum(p, 'a', t, 'V11', d);
+      chequearNum(p, 'b', d.v * t, 'V11', d);
+      chequearNum(p, 'c', d.v * t, 'V11', d);
+      chequearVF(p, 'd', true, 'V11', d);
+    },
+
+    V12_dos_proyectiles_retardo: function (p, d) {
+      var gg = 10;
+      var tTotal = 0.5 * gg * d.delta * d.delta / (gg * d.delta - d.v1);
+      chequearNum(p, 'a', tTotal - d.delta, 'V12', d);
+      chequearNum(p, 'b', d.v1 * tTotal - 0.5 * gg * tTotal * tTotal, 'V12', d);
+      chequearVF(p, 'c', (d.v1 - gg * tTotal) < 0, 'V12', d);
+      if (!(gg * d.delta - d.v1 > 0)) fallo('V12: denominador no positivo ' + JSON.stringify(d));
+      if (!(tTotal > d.delta)) fallo('V12: el cruce ocurre antes de soltar el segundo ' + JSON.stringify(d));
+    },
+
+    V13_encuentro_torre_y_suelo: function (p, d, gg) {
+      var t = d.H / (d.v2 - d.v1);
+      var y = d.v2 * t - 0.5 * gg * t * t;
+      chequearNum(p, 'a', 1, 'V13', d);
+      chequearNum(p, 'b', t, 'V13', d);
+      chequearNum(p, 'c', y, 'V13', d);
+      var hT = d.H + d.v1 * d.v1 / (2 * gg), hS = d.v2 * d.v2 / (2 * gg);
+      chequearOpc(p, 'd', hS > hT ? 0 : 1, 'V13', d);
+      if (!(y > 0 && y < d.H)) fallo('V13: cruce fuera del rango físico ' + JSON.stringify(d));
+      if (!(d.v2 > d.v1)) fallo('V13: v2 debe superar a v1 ' + JSON.stringify(d));
+    }
+  };
+
+  /* ================================ Ejecución ================================ */
+  var gVar = { g: g };
+  FIS.generadores.forEach(function (gen) {
+    var verificador = V[gen.id];
+    if (!verificador) { aviso('Sin verificador para ' + gen.id); }
+    var n = 0, fallosAntes = errores.length;
+    for (var i = 0; i < N; i++) {
+      var r = FIS.makeRng(1000 + i * 7919);
+      var p;
+      try { p = gen.gen(r, g); } catch (e) {
+        fallo(gen.id + ' (semilla ' + (1000 + i * 7919) + '): excepción ' + e.message);
+        continue;
+      }
+      if (!p || !p.enunciado || !p.incisos || !p.incisos.length) { fallo(gen.id + ': problema incompleto'); continue; }
+      p.incisos.forEach(function (x) {
+        if (!x.consigna) fallo(gen.id + ': inciso sin consigna');
+        if (x.tipo === 'numero' && (typeof x.valor !== 'number' || !isFinite(x.valor))) fallo(gen.id + ': inciso numérico sin valor finito (' + x.id + ')');
+        if (x.tipo === 'vf' && typeof x.valor !== 'boolean') fallo(gen.id + ': inciso V/F sin valor booleano (' + x.id + ')');
+        if (x.tipo === 'opcion' && (x.correcto < 0 || x.correcto >= x.opciones.length)) fallo(gen.id + ': opción correcta fuera de rango (' + x.id + ')');
+        if (x.tipo === 'texto' && (!x.rubrica || !x.rubrica.conceptos.length)) fallo(gen.id + ': inciso de texto sin rúbrica');
+        if (x.solucion && !x.solucion.length) aviso(gen.id + ': inciso ' + x.id + ' con solución vacía');
+        if (!x.solucion) aviso(gen.id + ': inciso ' + x.id + ' sin resolución paso a paso');
+      });
+      if (verificador && p.datos) {
+        try { verificador(p, p.datos, g); } catch (e2) { fallo(gen.id + ': verificador lanzó excepción ' + e2.message); }
+      }
+      n++;
+    }
+    log('· ' + gen.id.padEnd(30, ' ') + ' ' + n + ' casos' + (errores.length > fallosAntes ? '  ⚠ ' + (errores.length - fallosAntes) + ' fallos' : '  ✔'));
+  });
+
+  /* ------------------------- Banco teórico ---------------------------------- */
+  log('');
+  log('BANCO TEÓRICO (' + FIS.bancoTeorico.length + ' ítems)');
+  FIS.bancoTeorico.forEach(function (t) {
+    var n = 0;
+    for (var i = 0; i < 40; i++) {
+      var r = FIS.makeRng(500 + i * 104729);
+      var c;
+      try { c = t.gen(r, g); } catch (e) { fallo(t.id + ': excepción ' + e.message); continue; }
+      if (!c.afirmacion) fallo(t.id + ': sin afirmación');
+      if (!c.justificacion) fallo(t.id + ': sin justificación modelo');
+      if (!c.rubrica || !c.rubrica.conceptos || !c.rubrica.conceptos.length) fallo(t.id + ': sin rúbrica');
+      if (c.tipo !== 'texto' && typeof c.valor !== 'boolean') fallo(t.id + ': V/F sin valor booleano');
+      /* la rúbrica debe reconocer su propia justificación modelo */
+      var corr = FIS.corregirTexto(c.justificacion, c.rubrica);
+      if (corr.puntaje < 0.75) {
+        fallo(t.id + ': la rúbrica sólo reconoce ' + Math.round(corr.puntaje * 100) + '% de su propia justificación modelo · faltantes: ' + corr.faltantes.join(' | '));
+      }
+      /* un texto vacío no debe aprobar */
+      var vacio = FIS.corregirTexto('no se', c.rubrica);
+      if (vacio.puntaje > 0.4) fallo(t.id + ': un texto irrelevante obtiene ' + Math.round(vacio.puntaje * 100) + '%');
+      n++;
+    }
+    log('· ' + t.id.padEnd(34, ' ') + n + ' casos');
+  });
+
+  /* --------------------- Corrección de respuestas --------------------------- */
+  log('');
+  log('CORRECCIÓN DE RESPUESTAS');
+  FIS.generadores.forEach(function (gen) {
+    for (var i = 0; i < 20; i++) {
+      var p = gen.gen(FIS.makeRng(31337 + i * 97), g);
+      p.incisos.forEach(function (x) {
+        if (x.tipo === 'numero') {
+          var okExacto = FIS.corregirInciso(x, String(x.valor));
+          if (okExacto.estado !== 'ok') fallo(gen.id + ': la respuesta correcta ' + x.valor + ' no fue aceptada (inciso ' + x.id + ')');
+          var okComa = FIS.corregirInciso(x, String(x.valor).replace('.', ',') + ' ' + (x.unidad || ''));
+          if (okComa.estado !== 'ok') fallo(gen.id + ': no acepta coma decimal o unidad en el inciso ' + x.id);
+          if (Math.abs(x.valor) > 1) {
+            /* un valor claramente fuera de tolerancia en cualquier caso */
+            var okMal = FIS.corregirInciso(x, String(x.valor * 2 + 3.7));
+            if (okMal.estado === 'ok') fallo(gen.id + ': acepta como válido un valor incorrecto en el inciso ' + x.id);
+          }
+        }
+        if (x.tipo === 'vf') {
+          if (FIS.corregirInciso(x, x.valor ? 'V' : 'F').estado !== 'ok') fallo(gen.id + ': V/F correcto rechazado (' + x.id + ')');
+          if (FIS.corregirInciso(x, x.valor ? 'F' : 'V').estado !== 'mal') fallo(gen.id + ': V/F incorrecto aceptado (' + x.id + ')');
+        }
+        if (x.tipo === 'opcion') {
+          if (FIS.corregirInciso(x, String(x.correcto)).estado !== 'ok') fallo(gen.id + ': opción correcta rechazada (' + x.id + ')');
+          var otro = (x.correcto + 1) % x.opciones.length;
+          if (FIS.corregirInciso(x, String(otro)).estado !== 'mal') fallo(gen.id + ': opción incorrecta aceptada (' + x.id + ')');
+        }
+      });
+    }
+  });
+  log('· Corrección numérica, V/F y de opciones verificada en todos los generadores.');
+
+  /* --------------------- Sesiones aleatorias -------------------------------- */
+  log('');
+  log('GENERACIÓN DE SESIONES');
+  var combos = [
+    { categorias: ['horizontal'], nProblemas: 8, nTeoricos: 0, dif: 'auto' },
+    { categorias: ['vertical'], nProblemas: 8, nTeoricos: 0, dif: 2 },
+    { categorias: ['horizontal', 'vertical', 'teorico'], nProblemas: 10, nTeoricos: 3, dif: 3 },
+    { categorias: ['teorico'], nProblemas: 0, nTeoricos: 5, dif: 1 }
+  ];
+  combos.forEach(function (cfg, ci) {
+    for (var i = 0; i < 25; i++) {
+      cfg.seed = 777 + i * 31 + ci * 13;
+      cfg.g = g;
+      var s = FIS.crearSesion(cfg);
+      var esperado = cfg.nProblemas + cfg.nTeoricos;
+      if (s.items.length !== esperado) fallo('Sesión ' + JSON.stringify(cfg) + ': se esperaban ' + esperado + ' ítems y hay ' + s.items.length);
+      if (cfg.categorias.indexOf('horizontal') < 0 && cfg.categorias.indexOf('vertical') < 0) {
+        var hayProblema = s.items.some(function (it) { return it.tipo === 'problema'; });
+        if (hayProblema && cfg.nProblemas === 0) fallo('Sesión teórica con problemas inesperados');
+      }
+    }
+    log('· Combinación ' + (ci + 1) + '/' + combos.length + ' verificada (25 sesiones)');
+  });
+
+  /* --------------------- Reproducibilidad ----------------------------------- */
+  var a1 = FIS.crearSesion({ categorias: ['horizontal', 'vertical', 'teorico'], nProblemas: 6, nTeoricos: 2, dif: 'auto', g: 9.81, seed: 424242 });
+  var a2 = FIS.crearSesion({ categorias: ['horizontal', 'vertical', 'teorico'], nProblemas: 6, nTeoricos: 2, dif: 'auto', g: 9.81, seed: 424242 });
+  if (JSON.stringify(a1.items.map(function (i) { return i.genId; })) !== JSON.stringify(a2.items.map(function (i) { return i.genId; }))) {
+    fallo('La misma semilla genera sesiones distintas');
+  } else {
+    log('· Reproducibilidad con la misma semilla: OK');
+  }
+
+  /* --------------------- Variedad ------------------------------------------ */
+  var vistos = {};
+  for (var k = 0; k < 400; k++) {
+    var s2 = FIS.crearSesion({ categorias: ['horizontal', 'vertical'], nProblemas: 4, nTeoricos: 0, dif: 'auto', g: g, seed: 9000 + k * 17 });
+    s2.items.forEach(function (it) { vistos[it.genId] = (vistos[it.genId] || 0) + 1; });
+  }
+  var sinUsar = FIS.generadores.filter(function (gen) {
+    return (gen.cat === 'horizontal' || gen.cat === 'vertical' || gen.cat === 'mixto') && !vistos[gen.id];
+  }).map(function (gen) { return gen.id; });
+  if (sinUsar.length) aviso('Generadores nunca elegidos en 400 sesiones: ' + sinUsar.join(', '));
+  else log('· En 400 sesiones aparecieron todos los generadores de problemas.');
+
+  /* --------------------- Resumen ------------------------------------------- */
+  var salida = [];
+  salida.push('===== RESULTADO =====');
+  salida.push('Generadores: ' + FIS.generadores.length + ' · Ítems teóricos: ' + FIS.bancoTeorico.length);
+  salida.push('Errores: ' + errores.length + ' · Advertencias: ' + advertencias.length);
+  salida.push('');
+  if (errores.length) {
+    salida.push('--- ERRORES ---');
+    errores.slice(0, 400).forEach(function (e) { salida.push('[' + (errores.indexOf(e) + 1) + '] ' + e); });
+    salida.push('');
+  }
+  if (advertencias.length) {
+    salida.push('--- ADVERTENCIAS ---');
+    advertencias.slice(0, 40).forEach(function (a) { salida.push('· ' + a); });
+    salida.push('');
+  }
+  salida.push('--- DETALLE ---');
+  document.getElementById('salida').textContent = salida.concat(lineas).join('\n');
+  } catch (err) {
+    document.getElementById('salida').textContent = 'EXCEPCIÓN EN LAS PRUEBAS: ' + err.message + '\n' + (err.stack || '');
+  }
+})();
+</script>
+</body>
+</html>

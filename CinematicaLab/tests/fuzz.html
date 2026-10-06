@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Diagnóstico</title></head>
+<body>
+<pre id="salida">…</pre>
+<script src="../js/core.js"></script>
+<script src="../js/gen_horizontal.js"></script>
+<script src="../js/gen_vertical.js"></script>
+<script src="../js/gen_teorico.js"></script>
+<script src="../js/sesion.js"></script>
+<script>
+(function () {
+  var out = [];
+  var params = {};
+  location.search.replace(/^\?/, '').split('&').forEach(function (kv) {
+    var p = kv.split('='); if (p[0]) params[decodeURIComponent(p[0])] = decodeURIComponent(p[1] || '');
+  });
+  var grupo = params.grupo || 'todos';
+  var N = parseInt(params.n || '60', 10);
+  var FIS = window.FIS;
+  try {
+    out.push('FIS v' + FIS.VERSION + ' · generadores: ' + FIS.generadores.length + ' · teóricos: ' + FIS.bancoTeorico.length);
+    var t0 = Date.now();
+    var lista = FIS.generadores.filter(function (g) {
+      if (grupo === 'todos') return true;
+      if (grupo === 'horizontal') return g.cat === 'horizontal';
+      if (grupo === 'vertical') return g.cat === 'vertical' || g.cat === 'mixto';
+      return false;
+    });
+    lista.forEach(function (g) {
+      var t = Date.now();
+      for (var i = 0; i < N; i++) {
+        g.gen(FIS.makeRng(1234 + i * 7919), 9.81);
+      }
+      out.push('  ' + g.id + ': ' + N + ' ok (' + (Date.now() - t) + ' ms)');
+    });
+    if (grupo === 'teorico' || grupo === 'todos') {
+      var t2 = Date.now();
+      FIS.bancoTeorico.forEach(function (th) {
+        for (var i = 0; i < N; i++) th.gen(FIS.makeRng(99 + i * 13), 9.81);
+      });
+      out.push('  banco teórico: ' + FIS.bancoTeorico.length + ' × ' + N + ' ok (' + (Date.now() - t2) + ' ms)');
+    }
+    out.push('TOTAL: ' + (Date.now() - t0) + ' ms');
+  } catch (e) {
+    out.push('EXCEPCIÓN: ' + e.message + '\n' + (e.stack || ''));
+  }
+  document.getElementById('salida').textContent = out.join('\n');
+})();
+</script>
+</body>
+</html>

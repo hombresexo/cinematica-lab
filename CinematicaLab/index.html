@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cinemática Lab · MRUV y movimientos verticales</title>
+<meta name="description" content="Generador aleatorio de problemas de MRUV, caída libre y tiro vertical con corrección, pistas y resoluciones paso a paso.">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📐</text></svg>">
+</head>
+<body>
+
+<header class="barra-app">
+  <div class="marca">
+    <span class="logo">CL</span>
+    <div class="marca-texto">
+      <b>Cinemática Lab</b>
+      <span>MRUV · caída libre · tiro vertical — Seminario de Física (UTN FRA)</span>
+    </div>
+  </div>
+  <div class="barra-derecha">
+    <button class="btn fantasma chico" id="btn-tema">🌙 Modo oscuro</button>
+  </div>
+</header>
+
+<main class="contenedor">
+  <section id="vista-inicio" class="vista activa"></section>
+  <section id="vista-practica" class="vista"></section>
+  <section id="vista-resultados" class="vista"></section>
+  <section id="vista-teoria" class="vista"></section>
+  <section id="vista-historial" class="vista"></section>
+</main>
+
+<footer class="pie-app">
+  <span>Práctica ilimitada con datos aleatorios · g configurable · tolerancia de ±1 % en las respuestas numéricas</span>
+</footer>
+
+<!-- Motor y contenidos -->
+<script src="js/core.js"></script>
+<script>window.FIS = window.FIS || {}; window.FIS.omitirUnidad13 = true;</script>
+<script src="js/gen_unidad1.js"></script>
+<script src="js/gen_horizontal.js"></script>
+<script src="js/gen_vertical.js"></script>
+<script src="js/gen_teorico.js"></script>
+<script src="js/sesion.js"></script>
+<script src="js/teoria.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>

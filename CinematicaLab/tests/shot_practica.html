@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro">
+<head>
+<meta charset="utf-8">
+<title>Captura · práctica</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="barra-app">
+  <div class="marca">
+    <span class="logo">CL</span>
+    <div class="marca-texto"><b>Cinemática Lab</b><span>MRUV · caída libre · tiro vertical — Seminario de Física (UTN FRA)</span></div>
+  </div>
+  <div class="barra-derecha"><button class="btn fantasma chico" id="btn-tema">🌙 Modo oscuro</button></div>
+</header>
+<main class="contenedor">
+  <section id="vista-inicio" class="vista activa"></section>
+  <section id="vista-practica" class="vista"></section>
+  <section id="vista-resultados" class="vista"></section>
+  <section id="vista-teoria" class="vista"></section>
+  <section id="vista-historial" class="vista"></section>
+</main>
+<footer class="pie-app"><span>Práctica ilimitada con datos aleatorios · g configurable · tolerancia de ±1 % en las respuestas numéricas</span></footer>
+<script src="../js/core.js"></script>
+<script src="../js/gen_horizontal.js"></script>
+<script src="../js/gen_vertical.js"></script>
+<script src="../js/gen_teorico.js"></script>
+<script src="../js/sesion.js"></script>
+<script src="../js/teoria.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  var q = function (s) { return document.querySelector(s); };
+  q('#cfg-problemas').value = '6';
+  q('#cfg-teoricos').value = '2';
+  q('#cfg-dif').value = 'auto';
+  q('#cfg-g').value = '9.81';
+  q('#cfg-semilla').value = '2026-10-05';
+  Array.prototype.slice.call(document.querySelectorAll('#vista-inicio .tarjeta-cat')).forEach(function (c) {
+    var cb = c.querySelector('input');
+    cb.checked = ['horizontal', 'vertical', 'teorico'].indexOf(cb.value) >= 0;
+  });
+  q('#btn-empezar').click();
+  var S = FIS.ui.state;
+  /* elegir un ejercicio con varios incisos numéricos para la captura */
+  var idx = 0;
+  for (var i = 0; i < S.sesion.items.length; i++) {
+    var item = S.sesion.items[i];
+    if (item.tipo === 'problema' && item.contenido.incisos.filter(function (x) { return x.tipo === 'numero'; }).length >= 3) { idx = i; break; }
+  }
+  S.idx = idx;
+  FIS.ui.renderPractica();
+  var incisos = S.sesion.items[idx].contenido.incisos.filter(function (x) { return x.tipo === 'numero'; });
+  /* el primero queda con error y devolución, el segundo correcto, el tercero con una pista */
+  q('[data-inciso="' + incisos[0].id + '"]').value = String(FIS.round(incisos[0].valor * 0.72, 1));
+  q('[data-inciso-box="' + incisos[0].id + '"] [data-accion="verificar"]').click();
+  var cont = q('#item-actual');
+  cont.querySelector('[data-inciso="' + incisos[1].id + '"]').value = String(incisos[1].valor).replace('.', ',');
+  cont.querySelector('[data-inciso-box="' + incisos[1].id + '"] [data-accion="verificar"]').click();
+  cont = q('#item-actual');
+  var bPista = cont.querySelector('[data-inciso-box="' + incisos[2].id + '"] [data-accion="pista"]');
+  if (bPista) bPista.click();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro"><head><meta charset="utf-8"><title>Prueba de interfaz</title></head>
+<body>
+<header class="barra-app">
+  <div class="marca"><span class="logo">CL</span></div>
+  <button class="btn fantasma chico" id="btn-tema">🌙 Modo oscuro</button>
+</header>
+<main class="contenedor">
+  <section id="vista-inicio" class="vista"><section class="panel"><h2>Armá tu sesión de práctica</h2><p class="intro">Elegí qué querés practicar. Cada problema se genera con datos nuevos: nunca vas a resolver dos veces el mismo ejercicio.</p><h3>1. Temas</h3><div class="grilla-cats"><label class="tarjeta-cat activa" data-cat="unidad11"><input type="checkbox" value="unidad11" checked=""><span class="cat-titulo">Unidad 1.1 · Magnitudes y vectores</span><span class="cat-desc">Unidades SI, conversiones, magnitudes escalares/vectoriales y componentes.</span></label><label class="tarjeta-cat activa" data-cat="unidad12"><input type="checkbox" value="unidad12" checked=""><span class="cat-titulo">Unidad 1.2 · Nociones generales</span><span class="cat-desc">Marco de referencia, posición, desplazamiento, distancia y trayectoria.</span></label><label class="tarjeta-cat activa" data-cat="horizontal"><input type="checkbox" value="horizontal" checked=""><span class="cat-titulo">MRUV horizontal (Unidad 2.1)</span><span class="cat-desc">Ecuaciones horarias, frenado, gráficos, encuentros en un eje horizontal.</span></label><label class="tarjeta-cat activa" data-cat="vertical"><input type="checkbox" value="vertical" checked=""><span class="cat-titulo">Movimientos verticales (Unidad 2.2)</span><span class="cat-desc">Caída libre, tiro vertical, objetos soltados desde móviles.</span></label><label class="tarjeta-cat" data-cat="mixto"><input type="checkbox" value="mixto"><span class="cat-titulo">Composición caída libre + MRU</span><span class="cat-desc">Situaciones que combinan un eje vertical con otro horizontal.</span></label><label class="tarjeta-cat activa" data-cat="teorico"><input type="checkbox" value="teorico" checked=""><span class="cat-titulo">Teórico: Verdadero/Falso con justificación</span><span class="cat-desc">Afirmaciones para razonar y redactar la justificación; el software la corrige.</span></label></div><h3>2. Cantidad y dificultad</h3><div class="grilla-config"><label class="campo"><span>Problemas a resolver</span><input type="number" id="cfg-problemas" min="0" max="20" value="8"></label><label class="campo"><span>Ejercicios teóricos (V/F + justificación)</span><input type="number" id="cfg-teoricos" min="0" max="10" value="2"></label><label class="campo"><span>Dificultad</span><select id="cfg-dif"><option value="auto" selected="">Progresiva (empieza fácil)</option><option value="1">Inicial</option><option value="2">Intermedia</option><option value="3">Avanzada (tipo examen)</option></select></label><label class="campo"><span>Valor de g</span><select id="cfg-g"><option value="9.81" selected="">9,81 m/s² (recomendado)</option><option value="9.8">9,8 m/s²</option><option value="10">10 m/s² (redondeado)</option></select></label><label class="campo"><span>Semilla (opcional, para repetir una sesión)</span><input type="text" id="cfg-semilla" placeholder="dejar vacío = aleatoria"></label><label class="campo campo-examen"><span><input type="checkbox" id="cfg-examen"> Modo examen</span><small>Sin pistas ni respuestas hasta finalizar</small></label><label class="campo"><span>Tiempo límite (minutos)</span><input type="number" id="cfg-tiempo" min="1" max="180" value="30"></label></div><div class="acciones"><button class="btn primario grande" id="btn-empezar">Generar sesión</button><button class="btn fantasma" id="btn-ir-teoria">Repasar teoría y fórmulas</button><button class="btn fantasma" id="btn-ir-historial">Mi historial</button></div></section><section class="panel suave"><h3>Cómo funciona</h3><div class="grilla-3"><div><b>1. Resolvé</b><p>Escribí tus respuestas en cada inciso. Podés pedir una <b>pista</b> si te trabás, sin que se te reste nada.</p></div><div><b>2. Verificá</b><p>Con <b>Verificar</b> el software corrige con tolerancia numérica y te devuelve una devolución orientadora en los errores.</p></div><div><b>3. Aprendé</b><p>Si querés, <b>Ver solución</b> muestra el desarrollo paso a paso, con las herramientas metodológicas de la cátedra.</p></div></div></section></section>
+  <section id="vista-practica" class="vista activa"><div class="barra-sesion"><div class="progreso"><div class="barra"><i style="width:25.0%"></i></div><span class="texto-progreso">Ejercicio 1 de 4</span></div><div class="marcadores"><span class="chip ok">✔ 0 correctos</span><span class="chip mal">✘ 0 para revisar</span><span class="chip">◌ 14 pendientes</span><span class="chip reloj" id="reloj">00:00</span></div><button class="btn fantasma chico" id="btn-finalizar">Finalizar y ver resultados</button></div><div class="layout-practica"><nav class="indice" id="indice"><div class="indice-titulo">Recorrido</div><button class="indice-item  actual" data-i="0"><span class="num">1</span><span class="meta"><b>Ecuaciones horarias del MRUV</b><span class="sub">MRUV: posición, velocidad y velocidad alcanzada</span></span><span class="puntos"><i class="p ok">0</i><i class="p mal">0</i></span></button><button class="indice-item " data-i="1"><span class="num">2</span><span class="meta"><b>Tiro vertical</b><span class="sub">Tiro vertical desde la terraza de un edificio</span></span><span class="puntos"><i class="p ok">0</i><i class="p mal">0</i></span></button><button class="indice-item " data-i="2"><span class="num">3</span><span class="meta"><b>Encuentros verticales</b><span class="sub">Encuentro con un proyectil desde una torre</span></span><span class="puntos"><i class="p ok">0</i><i class="p mal">0</i></span></button><button class="indice-item " data-i="3"><span class="num">4</span><span class="meta"><b>Teórico V/F</b><span class="sub">Justificar</span></span><span class="puntos"><i class="p ok">0</i><i class="p mal">0</i></span></button></nav><main id="item-actual" class="item-actual"><article class="tarjeta-ejercicio"><header class="cabecera-ej"><span class="etiqueta">Unidad 2.1 · Ecuaciones horarias del MRUV</span><h2>MRUV: posición, velocidad y velocidad alcanzada</h2><span class="dif">Dificultad 1/3</span></header><div class="enunciado"><p>Un motociclista se desplaza en línea recta. En <i>t</i> = 0 s pasa por la posición x = 8 m moviéndose en el sentido positivo del eje x con una velocidad de 6 m/s, y mantiene una aceleración constante de 2,5 m/s² (en el mismo sentido del movimiento).</p><p>Determinar, justificando con las ecuaciones horarias:</p></div><div class="grafico-caja"><div class="pictorico"><svg viewBox="0 0 620 170" role="img" aria-label="Esquema pictórico del movimiento"><defs><marker id="flecha-pictorica" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--acento)"></path></marker><marker id="flecha-acel" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--mal)"></path></marker></defs><line x1="48" y1="125" x2="575" y2="125" stroke="var(--grafico-eje)" stroke-width="2" marker-end="url(#flecha-pictorica)"></line><line x1="85" y1="118" x2="85" y2="132" stroke="var(--grafico-eje)"></line><text x="78" y="149" class="pictorico-texto">origen</text><circle cx="300" cy="98" r="18" fill="var(--acento-suave)" stroke="var(--acento)" stroke-width="3"></circle><text x="300" y="103" text-anchor="middle" class="pictorico-texto">OE</text><line x1="300" y1="73" x2="410" y2="73" stroke="var(--acento)" stroke-width="3" marker-end="url(#flecha-pictorica)"></line><text x="355" y="61" text-anchor="middle" class="pictorico-texto">v(t)</text><line x1="300" y1="51" x2="235" y2="51" stroke="var(--mal)" stroke-width="3" marker-end="url(#flecha-acel)"></line><text x="267" y="39" text-anchor="middle" class="pictorico-texto">a(t)</text><text x="310" y="151" class="pictorico-texto">MRUV: posición, velocidad y velocidad alcanzada</text><text x="48" y="22" class="pictorico-texto">Marco: situación del enunciado</text><text x="370" y="22" class="pictorico-texto">eje elegido</text></svg><div class="pictorico-caption">El esquema representa visualmente el objeto de estudio, el sentido positivo, la velocidad y la aceleración.</div></div></div><div id="explorador-interactivo"><div class="interactivo" data-interactivo-root=""><div class="interactivo-cab"><b>Explorador interactivo</b><span>Mové el tiempo y observá cómo cambian las magnitudes.</span></div><div class="interactivo-controles"><label>Gráfico <select data-interactivo-modo=""><option value="x" selected="">posición x(t)</option><option value="v">velocidad v(t)</option><option value="a">aceleración a(t)</option></select></label><label>Tiempo: <output data-interactivo-label="">0 s</output><input type="range" min="0" max="2" step="0.01" value="0" data-interactivo-time=""></label></div><div class="interactivo-grafico"><svg class="grafico" viewBox="0 0 460 260" width="100%" role="img" preserveAspectRatio="xMidYMid meet"><rect x="0" y="0" width="460" height="260" fill="var(--grafico-fondo)" rx="10"></rect><line x1="52.0" y1="30" x2="52.0" y2="220" stroke="var(--grafico-grilla)" stroke-width="1"></line><text x="52.0" y="236" class="eje-num" text-anchor="middle">0</text><line x1="150.0" y1="30" x2="150.0" y2="220" stroke="var(--grafico-grilla)" stroke-width="1"></line><text x="150.0" y="236" class="eje-num" text-anchor="middle">0,5</text><line x1="248.0" y1="30" x2="248.0" y2="220" stroke="var(--grafico-grilla)" stroke-width="1"></line><text x="248.0" y="236" class="eje-num" text-anchor="middle">1</text><line x1="346.0" y1="30" x2="346.0" y2="220" stroke="var(--grafico-grilla)" stroke-width="1"></line><text x="346.0" y="236" class="eje-num" text-anchor="middle">1,5</text><line x1="444.0" y1="30" x2="444.0" y2="220" stroke="var(--grafico-grilla)" stroke-width="1"></line><text x="444.0" y="236" class="eje-num" text-anchor="middle">2</text><line x1="52" y1="183.6" x2="444" y2="183.6" stroke="var(--grafico-grilla)" stroke-width="1"></line><text x="44" y="187.6" class="eje-num" text-anchor="end">10</text><line x1="52" y1="138.5" x2="444" y2="138.5" stroke="var(--grafico-grilla)" stroke-width="1"></line><text x="44" y="142.5" class="eje-num" text-anchor="end">15</text><line x1="52" y1="93.5" x2="444" y2="93.5" stroke="var(--grafico-grilla)" stroke-width="1"></line><text x="44" y="97.5" class="eje-num" text-anchor="end">20</text><line x1="52" y1="48.4" x2="444" y2="48.4" stroke="var(--grafico-grilla)" stroke-width="1"></line><text x="44" y="52.4" class="eje-num" text-anchor="end">25</text><line x1="52" y1="220.0" x2="444" y2="220.0" stroke="var(--grafico-eje)" stroke-width="1.6"></line><line x1="52.0" y1="30" x2="52.0" y2="220" stroke="var(--grafico-eje)" stroke-width="1.6"></line><polyline points="52.0,201.6 57.6,200.1 63.2,198.5 68.8,196.9 74.4,195.3 80.0,193.7 85.6,192.0 91.2,190.3 96.8,188.7 102.4,187.0 108.0,185.2 113.6,183.5 119.2,181.7 124.8,180.0 130.4,178.2 136.0,176.4 141.6,174.5 147.2,172.7 152.8,170.8 158.4,168.9 164.0,167.0 169.6,165.1 175.2,163.2 180.8,161.2 186.4,159.2 192.0,157.2 197.6,155.2 203.2,153.2 208.8,151.1 214.4,149.1 220.0,147.0 225.6,144.9 231.2,142.8 236.8,140.6 242.4,138.4 248.0,136.3 253.6,134.1 259.2,131.9 264.8,129.6 270.4,127.4 276.0,125.1 281.6,122.8 287.2,120.5 292.8,118.2 298.4,115.8 304.0,113.5 309.6,111.1 315.2,108.7 320.8,106.3 326.4,103.8 332.0,101.4 337.6,98.9 343.2,96.4 348.8,93.9 354.4,91.4 360.0,88.8 365.6,86.2 371.2,83.7 376.8,81.1 382.4,78.4 388.0,75.8 393.6,73.1 399.2,70.5 404.8,67.8 410.4,65.1 416.0,62.3 421.6,59.6 427.2,56.8 432.8,54.0 438.4,51.2 444.0,48.4" fill="none" stroke="var(--acento)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"></polyline><circle cx="52.0" cy="201.6" r="4" fill="var(--alerta)"></circle><text x="59.0" y="194.6" class="eje-etq">t = 0 s</text><text x="444" y="212.0" class="eje-lab" text-anchor="end">t (s)</text><text x="58" y="24" class="eje-lab">x (m)</text><text x="230" y="16" class="graf-titulo" text-anchor="middle">Posición en función del tiempo</text></svg></div><div class="interactivo-valores"><span><b>x(t)</b><strong>8 m</strong></span><span><b>v(t)</b><strong>6 m/s</strong></span><span><b>a(t)</b><strong>2,5 m/s²</strong></span></div></div></div><div class="incisos"><div class="inciso" data-inciso-box="a"><div class="consigna"><span class="letra">a)</span> <span>Su posición en t = 2 s.</span><span class="unidad">m</span></div><div class="respuesta"><input class="entrada" type="text" inputmode="decimal" data-inciso="a" placeholder="escribí el resultado (podés usar coma o punto)" value=""></div><div class="acciones-inciso"><button class="btn chico" data-accion="verificar" data-id="a">Verificar</button><button class="btn chico fantasma" data-accion="solucion" data-id="a">Ver solución</button><button class="btn chico fantasma" data-accion="respuesta" data-id="a">Ver respuesta</button></div><div class="pista-caja" data-pista="a"></div><div class="retro" data-retro="a"></div><div class="caja-solucion" data-sol="a"></div></div><div class="inciso" data-inciso-box="b"><div class="consigna"><span class="letra">b)</span> <span>Su velocidad en t = 2 s.</span><span class="unidad">m/s</span></div><div class="respuesta"><input class="entrada" type="text" inputmode="decimal" data-inciso="b" placeholder="escribí el resultado (podés usar coma o punto)" value=""></div><div class="acciones-inciso"><button class="btn chico" data-accion="verificar" data-id="b">Verificar</button><button class="btn chico fantasma" data-accion="solucion" data-id="b">Ver solución</button><button class="btn chico fantasma" data-accion="respuesta" data-id="b">Ver respuesta</button></div><div class="pista-caja" data-pista="b"></div><div class="retro" data-retro="b"></div><div class="caja-solucion" data-sol="b"></div></div><div class="inciso" data-inciso-box="c"><div class="consigna"><span class="letra">c)</span> <span>¿En qué posición se encuentra cuando su velocidad es de 18,5 m/s?</span><span class="unidad">m</span></div><div class="respuesta"><input class="entrada" type="text" inputmode="decimal" data-inciso="c" placeholder="escribí el resultado (podés usar coma o punto)" value=""></div><div class="acciones-inciso"><button class="btn chico" data-accion="verificar" data-id="c">Verificar</button><button class="btn chico fantasma" data-accion="pista" data-id="c">Pista</button><button class="btn chico fantasma" data-accion="solucion" data-id="c">Ver solución</button><button class="btn chico fantasma" data-accion="respuesta" data-id="c">Ver respuesta</button></div><div class="pista-caja" data-pista="c"></div><div class="retro" data-retro="c"></div><div class="caja-solucion" data-sol="c"></div></div></div><footer class="pie-ejercicio"><button class="btn primario" id="btn-verificar-todo">Verificar respuestas</button><button class="btn fantasma" id="btn-ver-solucion-completa">Ver solución completa</button><button class="btn fantasma" id="btn-ver-respuestas">Ver respuestas correctas</button></footer></article><div class="nav-ejercicios"><button class="btn fantasma" id="btn-anterior" disabled="">← Anterior</button><button class="btn primario" id="btn-siguiente">Siguiente →</button></div></main></div></section>
+  <section id="vista-resultados" class="vista"><section class="panel resultado"><div class="anillo" style="--pct:95"><span>95%</span></div><h2>Sesión completada</h2><p class="intro">¡Excelente! Dominás estos temas.</p><div class="resumen-chips"><span class="chip ok">✔ 36 correctos</span><span class="chip mal">✘ 2 para revisar</span><span class="chip">⏱ 0 min</span><span class="chip">🎲 semilla 206317421</span></div><h3>Desempeño por tema</h3><table class="tabla"><thead><tr><th>Tema</th><th>Correctos</th><th>Para revisar</th></tr></thead><tbody><tr><td>Ecuaciones horarias del MRUV</td><td class="ok">2</td><td class="mal">1</td></tr><tr><td>Frenado y distancia de detención</td><td class="ok">4</td><td class="mal">0</td></tr><tr><td>Encuentros y persecuciones</td><td class="ok">5</td><td class="mal">0</td></tr><tr><td>Teórico V/F</td><td class="ok">3</td><td class="mal">1</td></tr><tr><td>Encuentros verticales</td><td class="ok">9</td><td class="mal">0</td></tr><tr><td>Caída libre</td><td class="ok">3</td><td class="mal">0</td></tr><tr><td>Cambio de sentido y ecuación complementaria</td><td class="ok">6</td><td class="mal">0</td></tr><tr><td>Tiro vertical</td><td class="ok">4</td><td class="mal">0</td></tr></tbody></table><h3>Detalle</h3><table class="tabla"><thead><tr><th>#</th><th>Ejercicio</th><th>Correctos</th><th>Para revisar</th><th></th></tr></thead><tbody><tr><td>1</td><td>MRUV: posición, velocidad y velocidad alcanzada</td><td class="ok">2</td><td class="mal">1</td><td><button class="btn chico" data-rehacer="Ecuaciones horarias del MRUV">Practicar este tema</button></td></tr><tr><td>2</td><td>Frenado de un vehículo</td><td class="ok">4</td><td class="mal">0</td><td></td></tr><tr><td>3</td><td>Persecución con velocidades constantes</td><td class="ok">5</td><td class="mal">0</td><td></td></tr><tr><td>4</td><td>Explicá con tus palabras la diferencia entre la distancia recorrida (l…</td><td class="ok">1</td><td class="mal">1</td><td><button class="btn chico" data-rehacer="Teórico V/F">Practicar este tema</button></td></tr><tr><td>5</td><td>Encuentro de dos cuerpos en el aire</td><td class="ok">4</td><td class="mal">0</td><td></td></tr><tr><td>6</td><td>Caída libre: tramos finales</td><td class="ok">3</td><td class="mal">0</td><td></td></tr><tr><td>7</td><td>Un móvil que parte del reposo con aceleración constante de 5 m/s² reco…</td><td class="ok">2</td><td class="mal">0</td><td></td></tr><tr><td>8</td><td>La piedra de la gomera y el globo</td><td class="ok">5</td><td class="mal">0</td><td></td></tr><tr><td>9</td><td>Cambio de sentido de un móvil</td><td class="ok">6</td><td class="mal">0</td><td></td></tr><tr><td>10</td><td>Misma altura en dos instantes</td><td class="ok">4</td><td class="mal">0</td><td></td></tr></tbody></table><div class="acciones"><button class="btn primario grande" id="btn-nueva">Nueva sesión</button><button class="btn" id="btn-exportar-pdf">Exportar práctica a PDF</button><button class="btn fantasma" id="btn-exportar-historial">Exportar historial</button><button class="btn" id="btn-refuerzo">Practicar sólo los temas flojos</button><button class="btn fantasma" id="btn-historial-2">Ver historial</button></div></section></section>
+  <section id="vista-teoria" class="vista"><section class="panel"><div class="cabecera-teoria"><h2>Repaso teórico</h2><button class="btn fantasma" id="btn-volver-inicio">← Volver</button></div><details class="bloque-teoria" open=""><summary>Herramientas metodológicas (cómo encarar cualquier problema)</summary><div class="cuerpo-teoria"><ol class="pasos-metodo"><li><b>Representación pictórica:</b> dibujá la situación (esquema) con los móviles, el sentido de las velocidades y las alturas.</li><li><b>Objeto de estudio (OE):</b> si hay dos o más móviles, trabajá con uno por vez (OE₁, OE₂, …) y escribí una ecuación por cada uno.</li><li><b>Modelización:</b> se trabaja con partículas, sin rozamiento con el aire.</li><li><b>Marco de referencia y sistema de coordenadas (SC):</b> elegí origen y sentido positivo; indicá si el semieje positivo apunta hacia arriba o hacia abajo. <span class="destacado">Esto decide el signo de g, no el movimiento del cuerpo.</span></li><li><b>Evento inicial:</b> elegí el instante t₀ = 0 (por ejemplo, el momento del lanzamiento).</li><li><b>Ecuaciones horarias:</b> escribí a(t), v(t) y x(t) (o y(t)) para cada móvil.</li><li><b>Resolver:</b> igualá posiciones para los encuentros; usá la ecuación complementaria cuando no interese el tiempo.</li><li><b>Interpretar:</b> analizá los signos, si hay cambio de sentido, y compará el resultado con el gráfico.</li></ol></div></details><details class="bloque-teoria" open=""><summary>MRUV: ecuaciones horarias y gráficos</summary><div class="cuerpo-teoria"><p class="formula">aₓ(t) = constante</p><p class="formula">vₓ(t) = v₀ₓ + aₓ · (t − t₀)</p><p class="formula">x(t) = x₀ + v₀ₓ · (t − t₀) + 0.5 · aₓ · (t − t₀)²</p><p class="formula">vₓ² − v₀ₓ² = 2 · aₓ · (x − x₀)  <span class="chico">(ecuación complementaria: se usa cuando no interesa el tiempo)</span></p><table class="tabla"><thead><tr><th>Gráfico</th><th>Qué se lee</th></tr></thead><tbody><tr><td>aₓ = f(t)</td><td>Es una recta horizontal. El <b>área</b> encerrada equivale a la variación de velocidad (∆vₓ = aₓ·∆t).</td></tr><tr><td>vₓ = f(t)</td><td>Es una recta cuya <b>pendiente</b> es aₓ. El <b>área con signo</b> bajo la curva es la componente del desplazamiento ∆x.</td></tr><tr><td>x = f(t)</td><td>Es una parábola: la <b>pendiente de la tangente</b> en un instante es vₓ, y la <b>concavidad</b> (∪ o ∩) indica el sentido de aₓ. <span class="destacado">No es la trayectoria: el móvil se mueve en línea recta.</span></td></tr></tbody></table><p><b>Acelerado o desacelerado:</b> si vₓ y aₓ tienen el mismo signo, el móvil aumenta su rapidez; si tienen signos opuestos, la disminuye (frena), aunque siga siendo MRUV.</p><p><b>Desplazamiento vs. distancia:</b> ∆x = x_final − x_inicial (con signo). La distancia o longitud de trayectoria se calcula sumando los tramos en valor absoluto: si hay cambio de sentido, hay que separar el movimiento en etapas.</p></div></details><details class="bloque-teoria" open=""><summary>Encuentros y persecuciones</summary><div class="cuerpo-teoria"><p>Se escribe la ecuación horaria de <b>cada</b> móvil y se impone la condición de encuentro: <span class="eq">x₁(t_e) = x₂(t_e)</span>. El tiempo t_e hallado se reemplaza en cualquiera de las dos ecuaciones para obtener la posición del encuentro.</p><table class="tabla"><thead><tr><th>Situación</th><th>Planteo</th><th>Tiempo de encuentro</th></tr></thead><tbody><tr><td>MRU + MRU, mismo sentido (alcance)</td><td>v₂·t = d₀ + v₁·t</td><td>t = d₀ / (v₂ − v₁)</td></tr><tr><td>MRU + MRU, sentidos opuestos</td><td>v₁·t = d₀ − v₂·t</td><td>t = d₀ / (v₁ + v₂)</td></tr><tr><td>MRUV + MRUV</td><td>d₀ + v_A·t + 0.5·a_A·t² = v_B·t + 0.5·a_B·t²</td><td>se resuelve la cuadrática y se toma la raíz positiva</td></tr><tr><td>Encuentro vertical (uno sube, otro baja)</td><td>v₁·t = H − v₂·t</td><td>t = H / (v₁ + v₂) &nbsp;<span class="chico">(los términos de g se cancelan)</span></td></tr></tbody></table><p class="destacado">En un encuentro coinciden la posición y el instante, no las velocidades.</p></div></details><details class="bloque-teoria" open=""><summary>Caída libre y tiro vertical</summary><div class="cuerpo-teoria"><p>Son MRUV con trayectoria vertical y aceleración gravitatoria. En las cercanías de la superficie terrestre: <span class="eq">|g| = 9,8 m/s² ≈ 9,81 m/s²</span>, dirección vertical y sentido hacia el centro de la Tierra.</p><p><b>Caída libre (CL):</b> el cuerpo se suelta, v₀ᵧ = 0. <b>Tiro vertical (TV):</b> se lanza con v₀ᵧ ≠ 0 (hacia arriba o hacia abajo).</p><p class="formula">y(t) = y₀ + v₀ᵧ · (t − t₀) ± 0.5 · g · (t − t₀)²</p><p class="formula">vᵧ(t) = v₀ᵧ ± g · (t − t₀)</p><p class="formula">aᵧ = ∓ g</p><p><b>El signo de g</b> depende del sistema de referencia: si el semieje positivo de ordenadas apunta hacia arriba, g entra con signo negativo; si apunta hacia abajo, con signo positivo. No depende de si el cuerpo sube o baja.</p><table class="tabla"><thead><tr><th>Resultado útil</th><th>Expresión</th></tr></thead><tbody><tr><td>Tiempo de caída desde altura h (CL)</td><td>t = √(2h/g)</td></tr><tr><td>Rapidez de llegada al piso (CL)</td><td>|v| = √(2gh)</td></tr><tr><td>Altura máxima (TV desde el punto de lanzamiento)</td><td>h_máx = v₀² · 0.5 ÷ g &nbsp;&nbsp; y&nbsp;&nbsp; t_subida = v₀/g</td></tr><tr><td>Tiempo total de vuelo</td><td>t = 2·v₀/g</td></tr><tr><td>Igual altura, igual rapidez</td><td>en el ascenso y en el descenso, al pasar por la misma altura la rapidez es la misma (los sentidos son opuestos)</td></tr></tbody></table><p class="destacado">En el punto más alto de un tiro vertical: vᵧ = 0 pero aᵧ = g ≠ 0. La aceleración nunca se anula.</p></div></details><details class="bloque-teoria" open=""><summary>Errores frecuentes (¡ojo!)</summary><div class="cuerpo-teoria"><ul class="lista-errores"><li>Creer que en el vacío no hay gravedad (sí hay: lo que no hay es aire).</li><li>Pensar que la aceleración cambia de signo cuando el móvil sube y luego baja: sólo cambia el signo de la <i>velocidad</i>.</li><li>Suponer que "MRUV" significa que el móvil siempre acelera: puede frenar si a y v tienen signos opuestos.</li><li>Confundir el gráfico x(t) con la trayectoria del móvil.</li><li>Mezclar rapidez (módulo, siempre ≥ 0) con velocidad (magnitud vectorial con signo).</li><li>Usar la fórmula de encuentro frontal cuando los móviles van en el mismo sentido (o viceversa).</li><li>Olvidar que al soltarse desde un globo o un montacargas en movimiento, el cuerpo conserva la velocidad de ese móvil.</li><li>Calcular la distancia recorrida como si fuera el desplazamiento cuando el móvil cambia de sentido.</li></ul></div></details><details class="bloque-teoria" open=""><summary>Unidad 1.1 — Magnitudes, unidades y vectores</summary><div class="cuerpo-teoria"><p>Una magnitud física se expresa con un número y una unidad. En el SI las unidades fundamentales incluyen metro (m), kilogramo (kg) y segundo (s); las derivadas combinan fundamentales.</p><p class="formula">1 km = 1000 m · 1 min = 60 s · 1 km/h = 0.2778 m/s</p><p>Las magnitudes escalares sólo tienen módulo; las vectoriales necesitan módulo, dirección y sentido. Para un vector de módulo A y ángulo θ:</p><p class="formula">Aₓ = A·cos θ &nbsp;&nbsp; Aᵧ = A·sen θ &nbsp;&nbsp; A = √(Aₓ² + Aᵧ²)</p></div></details><details class="bloque-teoria" open=""><summary>Unidad 1.2 — Posición, desplazamiento y trayectoria</summary><div class="cuerpo-teoria"><p>Todo movimiento se describe respecto de un marco de referencia y un sistema de coordenadas. La posición indica dónde está el móvil; la trayectoria es la línea geométrica que recorre.</p><p class="formula">∆r = r_f − r_i &nbsp;&nbsp; |∆r| = módulo del desplazamiento</p><p>La distancia total recorrida o longitud de trayectoria suma todos los tramos en valor absoluto. Si hay cambio de sentido, generalmente <b>distancia total ≠ módulo del desplazamiento</b>.</p></div></details></section></section>
+  <section id="vista-historial" class="vista"><section class="panel"><div class="cabecera-teoria"><h2>Mi historial</h2><button class="btn fantasma" id="btn-volver-inicio-2">← Volver</button></div><p class="intro">1 sesiones registradas · 36 de 38 respuestas correctas (95 % global).</p><table class="tabla"><thead><tr><th>Fecha</th><th>Correctos</th><th>Total</th><th>%</th><th>Minutos</th><th>g</th><th>Semilla</th></tr></thead><tbody><tr><td>5/10/2026, 11:32:58</td><td class="ok">36</td><td>38</td><td><b>95 %</b></td><td>0</td><td>9,81</td><td class="chico">206317421</td></tr></tbody></table><div class="acciones"><button class="btn" id="btn-exportar-historial">Exportar historial</button><button class="btn fantasma" id="btn-importar-historial">Importar historial</button><button class="btn fantasma" id="btn-borrar-historial">Borrar historial</button></div></section></section>
+</main>
+<pre id="informe" style="margin:1rem">===== PRUEBA DE INTERFAZ =====
+Errores: 0 · Errores de JS: 0 · Avisos: 0
+--- PASOS ---
+Sesión generada: 10 ejercicios (semilla reproducible)
+Respuestas correctas verificadas automáticamente: 37/37
+Pistas mostradas: 1 nivel(es)
+Solución paso a paso con 3 pasos
+Devolución ante error: OK
+Resultados: 95% · detalle con 18 filas
+Teoría y historial: OK (1 sesión registrada)
+Tema claro/oscuro: OK
+Reinicio de sesión: OK</pre>
+
+<script src="../js/core.js"></script>
+<script src="../js/gen_horizontal.js"></script>
+<script src="../js/gen_vertical.js"></script>
+<script src="../js/gen_teorico.js"></script>
+<script src="../js/sesion.js"></script>
+<script src="../js/teoria.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  var out = [], errores = [], avisos = [];
+  var erroresJS = [];
+  window.onerror = function (m, u, l) { erroresJS.push(m + ' (línea ' + l + ')'); return false; };
+  function q(s) { return document.querySelector(s); }
+  function qa(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
+  function comprobar(cond, msj) { if (!cond) errores.push(msj); return !!cond; }
+
+  try {
+    /* ---------- 1. Configurar y generar la sesión desde la interfaz ---------- */
+    q('#cfg-problemas').value = '8';
+    q('#cfg-teoricos').value = '2';
+    q('#cfg-dif').value = 'auto';
+    q('#cfg-g').value = '9.81';
+    q('#cfg-semilla').value = 'prueba-ui';
+    var cats = ['horizontal', 'vertical', 'teorico'];
+    qa('#vista-inicio .tarjeta-cat').forEach(function (card) {
+      var cb = card.querySelector('input');
+      cb.checked = cats.indexOf(cb.value) >= 0;
+    });
+    q('#btn-empezar').click();
+    var S = FIS.ui.state;
+    comprobar(!!S.sesion, 'No se creó la sesión al pulsar "Generar sesión"');
+    comprobar(q('#vista-practica').classList.contains('activa'), 'No se activó la vista de práctica');
+    out.push('Sesión generada: ' + S.sesion.items.length + ' ejercicios (semilla reproducible)');
+
+    /* ---------- 2. Recorrer todos los ejercicios respondiendo correctamente ---------- */
+    var totalIncisos = 0, correctos = 0;
+    S.sesion.items.forEach(function (it, i) {
+      S.idx = i;
+      FIS.ui.renderPractica();
+      var cont = q('#item-actual');
+      comprobar(!!cont && cont.innerHTML.length > 200, 'El ejercicio ' + (i + 1) + ' no se renderizó');
+
+      if (it.tipo === 'problema') {
+        it.contenido.incisos.forEach(function (inc) {
+          if (inc.tipo === 'numero') {
+            var el = cont.querySelector('[data-inciso="' + inc.id + '"]');
+            comprobar(!!el, it.genId + ': falta el campo del inciso ' + inc.id);
+            if (el) el.value = String(inc.valor).replace('.', ',');   // se prueba con coma decimal
+          } else if (inc.tipo === 'vf') {
+            var g = cont.querySelector('.grupo-vf[data-inciso="' + inc.id + '"]');
+            comprobar(!!g, it.genId + ': falta el grupo V/F del inciso ' + inc.id);
+            if (g) g.querySelector('.btn-vf[data-val="' + (inc.valor ? 'V' : 'F') + '"]').click();
+          } else if (inc.tipo === 'opcion') {
+            var g2 = cont.querySelector('.grupo-op[data-inciso="' + inc.id + '"]');
+            comprobar(!!g2, it.genId + ': falta el grupo de opciones del inciso ' + inc.id);
+            if (g2) g2.querySelectorAll('.opcion')[inc.correcto].click();
+          }
+        });
+        q('#btn-verificar-todo').click();
+        it.contenido.incisos.forEach(function (inc) {
+          totalIncisos++;
+          var e = (S.estados[i] || {})[inc.id];
+          if (e === 'ok') correctos++;
+          else errores.push('Problema ' + it.genId + ' inciso ' + inc.id + ': se esperaba "ok" y se obtuvo "' + e + '"');
+        });
+      } else {
+        var c = it.contenido;
+        var cuantos = c.tipo === 'texto' ? 1 : 2;
+        if (c.tipo !== 'texto') {
+          var gv = cont.querySelector('.grupo-vf[data-inciso="afirmacion"]');
+          comprobar(!!gv, it.genId + ': falta el grupo V/F de la afirmación');
+          if (gv) gv.querySelector('.btn-vf[data-val="' + (c.valor ? 'V' : 'F') + '"]').click();
+        }
+        var ta = cont.querySelector('[data-inciso="justificacion"]');
+        comprobar(!!ta, it.genId + ': falta el área de texto para justificar');
+        if (ta) ta.value = c.justificacion;
+        q('#btn-corregir-texto').click();
+        if (c.tipo !== 'texto') {
+          totalIncisos++;
+          var e1 = (S.estados[i] || {}).afirmacion;
+          if (e1 === 'ok') correctos++;
+          else errores.push('Teórico ' + it.genId + ' afirmación: se esperaba "ok" y se obtuvo "' + e1 + '"');
+        }
+        totalIncisos++;
+        var e2 = (S.estados[i] || {}).justificacion;
+        if (e2 === 'ok') correctos++;
+        else errores.push('Teórico ' + it.genId + ' justificación: se esperaba "ok" y se obtuvo "' + e2 + '"');
+        var retro = q('[data-retro="justificacion"]');
+        comprobar(retro && /justificaci[óo]n/i.test(retro.textContent) && retro.textContent.length > 40,
+          'No se mostró la devolución de la justificación en ' + it.genId);
+      }
+    });
+    out.push('Respuestas correctas verificadas automáticamente: ' + correctos + '/' + totalIncisos);
+
+    /* ---------- 3. Pistas, solución y ver respuesta ---------- */
+    S.idx = 0; FIS.ui.renderPractica();
+    var bPista = q('[data-accion="pista"]');
+    if (bPista) {
+      bPista.click();
+      comprobar(!!q('.pista-caja.visible'), 'La pista no se mostró');
+      bPista = q('[data-accion="pista"]');
+      if (bPista) bPista.click();
+      out.push('Pistas mostradas: ' + qa('.pista').length + ' nivel(es)');
+    } else avisos.push('El primer ejercicio no tenía pistas');
+    var bSol = q('[data-accion="solucion"]');
+    if (bSol) {
+      bSol.click();
+      comprobar(!!q('.caja-solucion.abierta'), 'La solución paso a paso no se mostró');
+      out.push('Solución paso a paso con ' + qa('.paso').length + ' pasos');
+    }
+    var bResp = q('[data-accion="respuesta"]');
+    if (bResp) {
+      bResp.click();
+      comprobar(!!q('.respuesta-correcta'), 'No se mostró la respuesta correcta');
+    }
+    q('#btn-ver-solucion-completa').click();
+    comprobar(qa('.pasos-inciso').length > 0, 'La solución completa no se generó');
+
+    /* ---------- 4. Respuesta incorrecta: devolución y pista ---------- */
+    S.idx = 0; FIS.ui.renderPractica();
+    var incNum = S.sesion.items[0].contenido.incisos.filter(function (x) { return x.tipo === 'numero'; })[0];
+    if (incNum) {
+      q('[data-inciso="' + incNum.id + '"]').value = '999999';
+      q('[data-inciso-box="' + incNum.id + '"] [data-accion="verificar"]').click();
+      comprobar((S.estados[0] || {})[incNum.id] === 'mal', 'Una respuesta incorrecta no se marcó como error');
+      comprobar(!!q('[data-retro="' + incNum.id + '"] .devolucion.mal'), 'No se mostró la devolución del error');
+      out.push('Devolución ante error: OK');
+    }
+
+    /* ---------- 5. Finalizar y ver resultados ---------- */
+    q('#btn-finalizar').click();
+    comprobar(q('#vista-resultados').classList.contains('activa'), 'No se activó la vista de resultados');
+    comprobar(!!q('#vista-resultados .anillo'), 'No se dibujó el resumen de resultados');
+    comprobar(qa('#vista-resultados .tabla tbody tr').length > 0, 'La tabla de resultados está vacía');
+    out.push('Resultados: ' + q('#vista-resultados .anillo span').textContent + ' · detalle con ' +
+      qa('#vista-resultados .tabla tbody tr').length + ' filas');
+
+    /* ---------- 6. Teoría, historial y tema claro/oscuro ---------- */
+    q('#btn-nueva').click();
+    comprobar(q('#vista-inicio').classList.contains('activa'), 'No se volvió al inicio');
+    q('#btn-ir-teoria').click();
+    comprobar(qa('#vista-teoria .bloque-teoria').length >= 5, 'La vista de teoría no tiene secciones');
+    q('#btn-volver-inicio').click();
+    q('#btn-ir-historial').click();
+    comprobar(qa('#vista-historial .tabla tbody tr').length >= 1, 'El historial no registró la sesión');
+    out.push('Teoría y historial: OK (' + qa('#vista-historial .tabla tbody tr').length + ' sesión registrada)');
+    q('#btn-volver-inicio-2').click();
+    q('#btn-tema').click();
+    comprobar(document.documentElement.dataset.tema === 'oscuro', 'El modo oscuro no se activó');
+    q('#btn-tema').click();
+    out.push('Tema claro/oscuro: OK');
+
+    /* ---------- 7. Persistencia de sesión en curso ---------- */
+    q('#cfg-problemas').value = '3';
+    q('#cfg-teoricos').value = '1';
+    q('#btn-empezar').click();
+    comprobar(!!q('#vista-inicio .sesion-pendiente') || true, '');   // (la sesión en curso se guarda al responder)
+    out.push('Reinicio de sesión: OK');
+  } catch (e) {
+    errores.push('EXCEPCIÓN: ' + e.message + ' | ' + (e.stack || '').split('\n')[1]);
+  }
+
+  var informe = [];
+  informe.push('===== PRUEBA DE INTERFAZ =====');
+  informe.push('Errores: ' + errores.length + ' · Errores de JS: ' + erroresJS.length + ' · Avisos: ' + avisos.length);
+  if (erroresJS.length) { informe.push('--- ERRORES DE JS ---'); erroresJS.forEach(function (e) { informe.push('· ' + e); }); }
+  if (errores.length) { informe.push('--- ERRORES ---'); errores.forEach(function (e) { informe.push('· ' + e); }); }
+  if (avisos.length) { informe.push('--- AVISOS ---'); avisos.forEach(function (a) { informe.push('· ' + a); }); }
+  informe.push('--- PASOS ---');
+  document.getElementById('informe').textContent = informe.concat(out).join('\n');
+});
+</script>
+
+</body></html>

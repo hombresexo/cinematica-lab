@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro">
+<head><meta charset="utf-8"><title>Componentes</title><link rel="stylesheet" href="../assets/styles.css"></head>
+<body>
+<main class="contenedor">
+  <section class="tarjeta-ejercicio">
+    <div class="acciones-inciso">
+      <button class="btn chico">Verificar</button>
+      <button class="btn chico fantasma">Pista</button>
+      <button class="btn chico fantasma">Ver solución</button>
+      <button class="btn chico fantasma">Ver respuesta</button>
+    </div>
+    <div class="acciones" style="margin-top:1rem">
+      <button class="btn">Verificar respuestas</button>
+      <button class="btn fantasma">Ver solución completa</button>
+      <button class="btn fantasma">Ver respuestas correctas</button>
+      <button class="btn grande">Finalizar sesión</button>
+    </div>
+    <div style="margin-top:1rem" class="grupo-vf" data-inciso="x">
+      <button class="btn-vf seleccionado" data-val="V">Verdadero</button>
+      <button class="btn-vf" data-val="F">Falso</button>
+    </div>
+    <div class="retro visible" style="margin-top:1rem">
+      <div class="devolucion ok"><b>¡Correcto!</b><p class="mini">Muy bien. Si querés ver el desarrollo completo, tocá Ver solución.</p></div>
+      <div class="devolucion mal" style="margin-top:.6rem"><b>Revisá esta respuesta</b><p class="mini">Todavía no es el resultado correcto. Repasá la fórmula y volvé a intentar.</p>
+      <span class="formula">y = y₀ + v₀·t − 0.5·g·t²</span></div>
+      <div class="puntaje" style="margin-top:.6rem"><i style="width:66%"></i></div>
+      <div class="pista"><b>Pista 1:</b> Escribí primero los datos y las incógnitas.</div>
+      <table class="tabla" style="margin-top:.8rem"><thead><tr><th>Ejercicio</th><th>Resultado</th></tr></thead>
+        <tbody><tr><td>1 · Tiro vertical</td><td><span class="ok">✔</span> 4/5</td></tr></tbody></table>
+    </div>
+  </section>
+</main>
+</body>
+</html>

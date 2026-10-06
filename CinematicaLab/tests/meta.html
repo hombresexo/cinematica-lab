@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>Catálogo</title></head>
+<body><pre id="s">…</pre>
+<script src="../js/core.js"></script>
+<script src="../js/gen_horizontal.js"></script>
+<script src="../js/gen_vertical.js"></script>
+<script src="../js/gen_teorico.js"></script>
+<script src="../js/sesion.js"></script>
+<script>
+var L = [];
+L.push('GENERADORES: ' + FIS.generadores.length);
+FIS.categorias.forEach(function (c) {
+  var lista = FIS.generadores.filter(function (g) { return g.cat === c.id; });
+  L.push('');
+  L.push('## ' + c.id + ' — ' + c.nombre + ' (' + lista.length + ')');
+  lista.forEach(function (g) {
+    L.push(g.id + ' | dif ' + g.dif + ' | ' + g.nombre + ' | ' + g.tema + ' | ' + g.desc);
+  });
+});
+L.push('');
+L.push('TEÓRICOS: ' + FIS.bancoTeorico.length);
+FIS.bancoTeorico.forEach(function (t) {
+  var muestras = [], n = 0;
+  for (var i = 0; i < 60; i++) {
+    var c = t.gen(FIS.makeRng(31 + i * 977), 9.81);
+    var tex = c.afirmacion;
+    if (muestras.indexOf(tex) < 0) muestras.push(tex);
+    n++;
+  }
+  L.push(t.id + ' | u' + t.unidad + ' | dif ' + t.dif + ' | variantes: ' + muestras.length);
+  L.push('   ej: ' + muestras[0]);
+  if (muestras[1]) L.push('   ej: ' + muestras[1]);
+});
+document.getElementById('s').textContent = L.join('\n');
+</script>
+</body></html>

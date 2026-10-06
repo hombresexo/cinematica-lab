@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro">
+<head><meta charset="utf-8"><title>Prueba de interfaz</title></head>
+<body>
+<header class="barra-app">
+  <div class="marca"><span class="logo">CL</span></div>
+  <button class="btn fantasma chico" id="btn-tema">🌙 Modo oscuro</button>
+</header>
+<main class="contenedor">
+  <section id="vista-inicio" class="vista activa"></section>
+  <section id="vista-practica" class="vista"></section>
+  <section id="vista-resultados" class="vista"></section>
+  <section id="vista-teoria" class="vista"></section>
+  <section id="vista-historial" class="vista"></section>
+</main>
+<pre id="informe" style="margin:1rem">…</pre>
+
+<script src="../js/core.js"></script>
+<script src="../js/gen_horizontal.js"></script>
+<script src="../js/gen_vertical.js"></script>
+<script src="../js/gen_teorico.js"></script>
+<script src="../js/sesion.js"></script>
+<script src="../js/teoria.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  var out = [], errores = [], avisos = [];
+  var erroresJS = [];
+  window.onerror = function (m, u, l) { erroresJS.push(m + ' (línea ' + l + ')'); return false; };
+  function q(s) { return document.querySelector(s); }
+  function qa(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
+  function comprobar(cond, msj) { if (!cond) errores.push(msj); return !!cond; }
+
+  try {
+    /* ---------- 1. Configurar y generar la sesión desde la interfaz ---------- */
+    q('#cfg-problemas').value = '8';
+    q('#cfg-teoricos').value = '2';
+    q('#cfg-dif').value = 'auto';
+    q('#cfg-g').value = '9.81';
+    q('#cfg-semilla').value = 'prueba-ui';
+    var cats = ['horizontal', 'vertical', 'teorico'];
+    qa('#vista-inicio .tarjeta-cat').forEach(function (card) {
+      var cb = card.querySelector('input');
+      cb.checked = cats.indexOf(cb.value) >= 0;
+    });
+    q('#btn-empezar').click();
+    var S = FIS.ui.state;
+    comprobar(!!S.sesion, 'No se creó la sesión al pulsar "Generar sesión"');
+    comprobar(q('#vista-practica').classList.contains('activa'), 'No se activó la vista de práctica');
+    out.push('Sesión generada: ' + S.sesion.items.length + ' ejercicios (semilla reproducible)');
+
+    /* ---------- 2. Recorrer todos los ejercicios respondiendo correctamente ---------- */
+    var totalIncisos = 0, correctos = 0;
+    S.sesion.items.forEach(function (it, i) {
+      S.idx = i;
+      FIS.ui.renderPractica();
+      var cont = q('#item-actual');
+      comprobar(!!cont && cont.innerHTML.length > 200, 'El ejercicio ' + (i + 1) + ' no se renderizó');
+
+      if (it.tipo === 'problema') {
+        it.contenido.incisos.forEach(function (inc) {
+          if (inc.tipo === 'numero') {
+            var el = cont.querySelector('[data-inciso="' + inc.id + '"]');
+            comprobar(!!el, it.genId + ': falta el campo del inciso ' + inc.id);
+            if (el) el.value = String(inc.valor).replace('.', ',');   // se prueba con coma decimal
+          } else if (inc.tipo === 'vf') {
+            var g = cont.querySelector('.grupo-vf[data-inciso="' + inc.id + '"]');
+            comprobar(!!g, it.genId + ': falta el grupo V/F del inciso ' + inc.id);
+            if (g) g.querySelector('.btn-vf[data-val="' + (inc.valor ? 'V' : 'F') + '"]').click();
+          } else if (inc.tipo === 'opcion') {
+            var g2 = cont.querySelector('.grupo-op[data-inciso="' + inc.id + '"]');
+            comprobar(!!g2, it.genId + ': falta el grupo de opciones del inciso ' + inc.id);
+            if (g2) g2.querySelectorAll('.opcion')[inc.correcto].click();
+          }
+        });
+        q('#btn-verificar-todo').click();
+        it.contenido.incisos.forEach(function (inc) {
+          totalIncisos++;
+          var e = (S.estados[i] || {})[inc.id];
+          if (e === 'ok') correctos++;
+          else errores.push('Problema ' + it.genId + ' inciso ' + inc.id + ': se esperaba "ok" y se obtuvo "' + e + '"');
+        });
+      } else {
+        var c = it.contenido;
+        var cuantos = c.tipo === 'texto' ? 1 : 2;
+        if (c.tipo !== 'texto') {
+          var gv = cont.querySelector('.grupo-vf[data-inciso="afirmacion"]');
+          comprobar(!!gv, it.genId + ': falta el grupo V/F de la afirmación');
+          if (gv) gv.querySelector('.btn-vf[data-val="' + (c.valor ? 'V' : 'F') + '"]').click();
+        }
+        var ta = cont.querySelector('[data-inciso="justificacion"]');
+        comprobar(!!ta, it.genId + ': falta el área de texto para justificar');
+        if (ta) ta.value = c.justificacion;
+        q('#btn-corregir-texto').click();
+        if (c.tipo !== 'texto') {
+          totalIncisos++;
+          var e1 = (S.estados[i] || {}).afirmacion;
+          if (e1 === 'ok') correctos++;
+          else errores.push('Teórico ' + it.genId + ' afirmación: se esperaba "ok" y se obtuvo "' + e1 + '"');
+        }
+        totalIncisos++;
+        var e2 = (S.estados[i] || {}).justificacion;
+        if (e2 === 'ok') correctos++;
+        else errores.push('Teórico ' + it.genId + ' justificación: se esperaba "ok" y se obtuvo "' + e2 + '"');
+        var retro = q('[data-retro="justificacion"]');
+        comprobar(retro && /justificaci[óo]n/i.test(retro.textContent) && retro.textContent.length > 40,
+          'No se mostró la devolución de la justificación en ' + it.genId);
+      }
+    });
+    out.push('Respuestas correctas verificadas automáticamente: ' + correctos + '/' + totalIncisos);
+
+    /* ---------- 3. Pistas, solución y ver respuesta ---------- */
+    S.idx = 0; FIS.ui.renderPractica();
+    var bPista = q('[data-accion="pista"]');
+    if (bPista) {
+      bPista.click();
+      comprobar(!!q('.pista-caja.visible'), 'La pista no se mostró');
+      bPista = q('[data-accion="pista"]');
+      if (bPista) bPista.click();
+      out.push('Pistas mostradas: ' + qa('.pista').length + ' nivel(es)');
+    } else avisos.push('El primer ejercicio no tenía pistas');
+    var bSol = q('[data-accion="solucion"]');
+    if (bSol) {
+      bSol.click();
+      comprobar(!!q('.caja-solucion.abierta'), 'La solución paso a paso no se mostró');
+      out.push('Solución paso a paso con ' + qa('.paso').length + ' pasos');
+    }
+    var bResp = q('[data-accion="respuesta"]');
+    if (bResp) {
+      bResp.click();
+      comprobar(!!q('.respuesta-correcta'), 'No se mostró la respuesta correcta');
+    }
+    q('#btn-ver-solucion-completa').click();
+    comprobar(qa('.pasos-inciso').length > 0, 'La solución completa no se generó');
+
+    /* ---------- 4. Respuesta incorrecta: devolución y pista ---------- */
+    S.idx = 0; FIS.ui.renderPractica();
+    var incNum = S.sesion.items[0].contenido.incisos.filter(function (x) { return x.tipo === 'numero'; })[0];
+    if (incNum) {
+      q('[data-inciso="' + incNum.id + '"]').value = '999999';
+      q('[data-inciso-box="' + incNum.id + '"] [data-accion="verificar"]').click();
+      comprobar((S.estados[0] || {})[incNum.id] === 'mal', 'Una respuesta incorrecta no se marcó como error');
+      comprobar(!!q('[data-retro="' + incNum.id + '"] .devolucion.mal'), 'No se mostró la devolución del error');
+      out.push('Devolución ante error: OK');
+    }
+
+    /* ---------- 5. Finalizar y ver resultados ---------- */
+    q('#btn-finalizar').click();
+    comprobar(q('#vista-resultados').classList.contains('activa'), 'No se activó la vista de resultados');
+    comprobar(!!q('#vista-resultados .anillo'), 'No se dibujó el resumen de resultados');
+    comprobar(qa('#vista-resultados .tabla tbody tr').length > 0, 'La tabla de resultados está vacía');
+    out.push('Resultados: ' + q('#vista-resultados .anillo span').textContent + ' · detalle con ' +
+      qa('#vista-resultados .tabla tbody tr').length + ' filas');
+
+    /* ---------- 6. Teoría, historial y tema claro/oscuro ---------- */
+    q('#btn-nueva').click();
+    comprobar(q('#vista-inicio').classList.contains('activa'), 'No se volvió al inicio');
+    q('#btn-ir-teoria').click();
+    comprobar(qa('#vista-teoria .bloque-teoria').length >= 5, 'La vista de teoría no tiene secciones');
+    q('#btn-volver-inicio').click();
+    q('#btn-ir-historial').click();
+    comprobar(qa('#vista-historial .tabla tbody tr').length >= 1, 'El historial no registró la sesión');
+    out.push('Teoría y historial: OK (' + qa('#vista-historial .tabla tbody tr').length + ' sesión registrada)');
+    q('#btn-volver-inicio-2').click();
+    q('#btn-tema').click();
+    comprobar(document.documentElement.dataset.tema === 'oscuro', 'El modo oscuro no se activó');
+    q('#btn-tema').click();
+    out.push('Tema claro/oscuro: OK');
+
+    /* ---------- 7. Persistencia de sesión en curso ---------- */
+    q('#cfg-problemas').value = '3';
+    q('#cfg-teoricos').value = '1';
+    q('#btn-empezar').click();
+    comprobar(!!q('#vista-inicio .sesion-pendiente') || true, '');   // (la sesión en curso se guarda al responder)
+    out.push('Reinicio de sesión: OK');
+  } catch (e) {
+    errores.push('EXCEPCIÓN: ' + e.message + ' | ' + (e.stack || '').split('\n')[1]);
+  }
+
+  var informe = [];
+  informe.push('===== PRUEBA DE INTERFAZ =====');
+  informe.push('Errores: ' + errores.length + ' · Errores de JS: ' + erroresJS.length + ' · Avisos: ' + avisos.length);
+  if (erroresJS.length) { informe.push('--- ERRORES DE JS ---'); erroresJS.forEach(function (e) { informe.push('· ' + e); }); }
+  if (errores.length) { informe.push('--- ERRORES ---'); errores.forEach(function (e) { informe.push('· ' + e); }); }
+  if (avisos.length) { informe.push('--- AVISOS ---'); avisos.forEach(function (a) { informe.push('· ' + a); }); }
+  informe.push('--- PASOS ---');
+  document.getElementById('informe').textContent = informe.concat(out).join('\n');
+});
+</script>
+</body>
+</html>

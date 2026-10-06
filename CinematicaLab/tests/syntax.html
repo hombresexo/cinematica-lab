@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>Sintaxis</title></head>
+<body><pre id="s">…</pre>
+<script>
+var out = [];
+var archivos = ['../js/core.js', '../js/gen_horizontal.js', '../js/gen_vertical.js', '../js/gen_teorico.js', '../js/sesion.js', '../js/teoria.js', '../js/ui.js'];
+var i = 0;
+function siguiente() {
+  if (i >= archivos.length) { document.getElementById('s').textContent = out.join('\n'); return; }
+  var url = archivos[i++];
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, false);
+  try { xhr.send(null); } catch (e) { out.push(url + ' · no se pudo leer: ' + e.message); siguiente(); return; }
+  var txt = xhr.responseText;
+  out.push(url + ' · ' + txt.length + ' chars · HTTP ' + xhr.status);
+  try {
+    new Function(txt);
+    out.push('   sintaxis OK');
+  } catch (e2) {
+    out.push('   ERROR DE SINTAXIS: ' + e2.message);
+  }
+  siguiente();
+}
+siguiente();
+</script>
+</body></html>
