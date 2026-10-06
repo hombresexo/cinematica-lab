@@ -325,18 +325,32 @@
   FIS.paso = function (titulo, html) { return { titulo: titulo, html: html }; };
 
   /** Bloque de "herramientas metodológicas" usado por la cátedra. */
-  FIS.diagramaPictorico = function (oe, mr, sc, rp) {
+  var pictoricoId = 0;
+  FIS.diagramaPictorico = function (oe, mr, sc, rp, opciones) {
+    opciones = opciones || {};
     var objeto = String(oe || 'móvil').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     var marco = String(mr || 'referencia').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     var eje = String(sc || 'eje elegido').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return '<div class="pictorico"><svg viewBox="0 0 620 170" role="img" aria-label="Esquema pictórico del movimiento">' +
-      '<defs><marker id="flecha-pictorica" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--acento)"/></marker><marker id="flecha-acel" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--mal)"/></marker></defs>' +
-      '<line x1="48" y1="125" x2="575" y2="125" stroke="var(--grafico-eje)" stroke-width="2" marker-end="url(#flecha-pictorica)"/><line x1="85" y1="118" x2="85" y2="132" stroke="var(--grafico-eje)"/><text x="78" y="149" class="pictorico-texto">origen</text>' +
-      '<circle cx="300" cy="98" r="18" fill="var(--acento-suave)" stroke="var(--acento)" stroke-width="3"/><text x="300" y="103" text-anchor="middle" class="pictorico-texto">OE</text>' +
-      '<line x1="300" y1="73" x2="410" y2="73" stroke="var(--acento)" stroke-width="3" marker-end="url(#flecha-pictorica)"/><text x="355" y="61" text-anchor="middle" class="pictorico-texto">v(t)</text>' +
-      '<line x1="300" y1="51" x2="235" y2="51" stroke="var(--mal)" stroke-width="3" marker-end="url(#flecha-acel)"/><text x="267" y="39" text-anchor="middle" class="pictorico-texto">a(t)</text>' +
-      '<text x="310" y="151" class="pictorico-texto">' + objeto + '</text><text x="48" y="22" class="pictorico-texto">Marco: ' + marco + '</text><text x="370" y="22" class="pictorico-texto">' + eje + '</text></svg>' +
-      '<div class="pictorico-caption">' + String(rp || 'El esquema muestra el objeto, el eje y los vectores instantáneos.') + '</div></div>';
+    var vertical = opciones.orientacion === 'vertical';
+    var vSign = Number(opciones.vSign) < 0 ? -1 : 1;
+    var aSign = opciones.aSign === undefined ? (vertical ? -1 : 1) : (Number(opciones.aSign) < 0 ? -1 : 1);
+    var id = 'pictorico-' + (++pictoricoId);
+    var axis, object, velocity, acceleration, labels;
+    if (vertical) {
+      axis = '<line x1="100" y1="145" x2="100" y2="25" stroke="var(--grafico-eje)" stroke-width="3" marker-end="url(#' + id + '-v)"/><line x1="80" y1="145" x2="560" y2="145" stroke="var(--grafico-grilla)" stroke-width="2"/><text x="78" y="163" class="pictorico-texto">piso / origen</text><text x="108" y="29" class="pictorico-texto">+Y</text><text x="72" y="85" class="pictorico-texto" transform="rotate(-90 72 85)">eje vertical</text>';
+      object = '<circle cx="300" cy="76" r="18" fill="var(--acento-suave)" stroke="var(--acento)" stroke-width="3"/><text x="300" y="81" text-anchor="middle" class="pictorico-texto">OE</text>';
+      velocity = '<line x1="300" y1="' + (vSign > 0 ? '94' : '58') + '" x2="300" y2="' + (vSign > 0 ? '42' : '110') + '" stroke="var(--acento)" stroke-width="3" marker-end="url(#' + id + '-v)"/><text x="316" y="76" class="pictorico-texto">v(t)</text>';
+      acceleration = '<line x1="340" y1="' + (aSign > 0 ? '94' : '58') + '" x2="340" y2="' + (aSign > 0 ? '42' : '110') + '" stroke="var(--mal)" stroke-width="3" marker-end="url(#' + id + '-a)"/><text x="356" y="76" class="pictorico-texto">a(t)</text>';
+      labels = '<text x="312" y="136" class="pictorico-texto">' + objeto + '</text><text x="48" y="20" class="pictorico-texto">Marco: ' + marco + '</text><text x="370" y="20" class="pictorico-texto">' + eje + '</text>';
+    } else {
+      var vx2 = vSign > 0 ? 410 : 190, ax2 = aSign > 0 ? 365 : 235;
+      axis = '<line x1="48" y1="125" x2="575" y2="125" stroke="var(--grafico-eje)" stroke-width="2" marker-end="url(#' + id + '-v)"/><line x1="85" y1="118" x2="85" y2="132" stroke="var(--grafico-eje)"/><text x="78" y="149" class="pictorico-texto">origen</text>';
+      object = '<circle cx="300" cy="98" r="18" fill="var(--acento-suave)" stroke="var(--acento)" stroke-width="3"/><text x="300" y="103" text-anchor="middle" class="pictorico-texto">OE</text>';
+      velocity = '<line x1="300" y1="73" x2="' + vx2 + '" y2="73" stroke="var(--acento)" stroke-width="3" marker-end="url(#' + id + '-v)"/><text x="' + ((300 + vx2) / 2) + '" y="61" text-anchor="middle" class="pictorico-texto">v(t)</text>';
+      acceleration = '<line x1="300" y1="51" x2="' + ax2 + '" y2="51" stroke="var(--mal)" stroke-width="3" marker-end="url(#' + id + '-a)"/><text x="' + ((300 + ax2) / 2) + '" y="39" text-anchor="middle" class="pictorico-texto">a(t)</text>';
+      labels = '<text x="310" y="151" class="pictorico-texto">' + objeto + '</text><text x="48" y="22" class="pictorico-texto">Marco: ' + marco + '</text><text x="370" y="22" class="pictorico-texto">' + eje + '</text>';
+    }
+    return '<div class="pictorico"><svg viewBox="0 0 620 170" role="img" aria-label="' + (vertical ? 'Esquema pictórico sobre el eje Y vertical' : 'Esquema pictórico sobre el eje X horizontal') + '"><defs><marker id="' + id + '-v" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--acento)"/></marker><marker id="' + id + '-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--mal)"/></marker></defs>' + axis + object + velocity + acceleration + labels + '</svg><div class="pictorico-caption">' + String(rp || (vertical ? 'El esquema muestra el eje Y vertical, el piso como origen y los vectores instantáneos.' : 'El esquema muestra el eje X horizontal y los vectores instantáneos.')) + '</div></div>';
   };
   FIS.herramientas = function (oe, mr, sc, rp) {
     return FIS.paso('Herramientas metodológicas',
@@ -346,7 +360,7 @@
       '<li><b>Marco de referencia:</b> ' + mr + '</li>' +
       '<li><b>Sistema de coordenadas:</b> ' + sc + '</li>' +
       '<li><b>Representación pictórica:</b> ver esquema</li>' +
-      '</ul>' + FIS.diagramaPictorico(oe, mr, sc, rp));
+      '</ul>' + FIS.diagramaPictorico(oe, mr, sc, rp, { orientacion: /\beje\s+y\b|vertical/i.test(sc) ? 'vertical' : 'horizontal' }));
   };
 
   FIS.eq = function (txt) { return '<span class="eq">' + String(txt).replace(/½/g, '0.5').replace(/1\/3,6/g, '0.2778').replace(/\/(\s*\()/g, ' ÷ $1').replace(/²\/(\s*2)/g, '² · 0.5 ÷ $1') + '</span>'; };

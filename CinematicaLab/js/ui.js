@@ -28,6 +28,13 @@
     root.scrollTo({ top: 0, behavior: 'smooth' });
   }
   function esTexto(inc) { return inc.tipo === 'texto'; }
+  function esMovimientoVertical(it) {
+    if (!it) return false;
+    var contenido = it.contenido || {};
+    var texto = [it.tema, it.nombre, contenido.titulo].join(' ');
+    return it.cat === 'vertical' || it.unidad === '2.2' || /^V/i.test(String(it.genId || '')) ||
+      /\beje\s+y\b|vertical|ca[ií]da libre|tiro vertical|globo/i.test(texto);
+  }
 
   /* ================================================================== */
   /* Persistencia de la sesión en curso                                  */
@@ -285,6 +292,7 @@
     var sol = state.soluciones[state.idx] || {};
     var interSpec = it.tipo === 'problema' ? FIS.interactivoSpec(it.genId, it.contenido.datos, state.sesion.g) : null;
     var interState = state.tGraficos[state.idx] || { t: 0, modo: 'x' };
+    var movimientoVertical = esMovimientoVertical(it);
 
     if (it.tipo === 'problema') {
       var incisos = it.contenido.incisos.map(function (inc) {
@@ -298,7 +306,7 @@
         '<span class="dif">Dificultad ' + it.dif + '/3</span>' +
         '</header>' +
         '<div class="enunciado">' + it.contenido.enunciado + '</div>' +
-        '<div class="grafico-caja">' + FIS.diagramaPictorico(it.contenido.titulo, 'situación del enunciado', it.genId.charAt(0) === 'V' ? 'eje y vertical, positivo hacia arriba' : 'eje x horizontal, positivo hacia la derecha', 'El esquema representa el eje físico del enunciado: en vertical la gravedad apunta hacia abajo; en horizontal las flechas siguen los signos del movimiento.', { orientacion: it.genId.charAt(0) === 'V' ? 'vertical' : 'horizontal', aSign: it.genId.charAt(0) === 'V' ? -1 : 1 }) + '</div>' +
+        '<div class="grafico-caja">' + FIS.diagramaPictorico(it.contenido.titulo, 'situación del enunciado', movimientoVertical ? 'eje Y vertical, positivo hacia arriba' : 'eje X horizontal, positivo hacia la derecha', movimientoVertical ? 'El esquema representa el eje físico Y: el piso es el origen, la altura crece hacia arriba y la gravedad apunta hacia abajo.' : 'El esquema representa el eje físico X: el origen queda a la izquierda y las flechas siguen los signos del movimiento.', { orientacion: movimientoVertical ? 'vertical' : 'horizontal', aSign: movimientoVertical ? -1 : 1 }) + '</div>' +
         (it.contenido.grafico ? '<div class="grafico-caja">' + it.contenido.grafico + '</div>' : '') +
         (interSpec ? '<div id="explorador-interactivo">' + FIS.interactivoHTML(interSpec, interState.t, interState.modo) + '</div>' : '') +
         '<div class="incisos">' + incisos + '</div>' +
