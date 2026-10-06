@@ -118,6 +118,8 @@ b { font-weight: 650; }
 .btn.grande { padding: .8rem 1.5rem; font-size: 1.02rem; }
 .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 .acciones { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.2rem; }
+.btn.verificar { background: #174ea6; border-color: #174ea6; color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,.25); }
+.btn.verificar:hover { background: #0b3478; border-color: #0b3478; color: #fff; }
 
 /* --------------------------- Formularios ----------------------------- */
 .grilla-cats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: .8rem; }
@@ -158,6 +160,7 @@ b { font-weight: 650; }
 .barra { flex: 1; height: 8px; background: var(--borde); border-radius: 99px; overflow: hidden; min-width: 120px; }
 .barra i { display: block; height: 100%; background: linear-gradient(90deg, var(--acento), #7c3aed); transition: width .35s ease; }
 .texto-progreso { font-size: .82rem; color: var(--texto-suave); white-space: nowrap; }
+.acciones-sesion { display: flex; align-items: center; gap: .45rem; flex-wrap: wrap; }
 .marcadores { display: flex; gap: .4rem; flex-wrap: wrap; }
 .chip {
   font-size: .78rem; padding: .22rem .6rem; border-radius: 99px; border: 1px solid var(--borde);
