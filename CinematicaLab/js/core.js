@@ -341,23 +341,23 @@
       var maxAlt = 0, oi;
       for (oi = 0; oi < objs.length; oi++) maxAlt = Math.max(maxAlt, Number(objs[oi].altura) || 0);
       maxAlt = Math.max(maxAlt, 1);
-      function yAltura(hh) { return 140 - Math.min(106, Math.max(0, (Number(hh) || 0) / maxAlt * 106)); }
+      function yAltura(hh) { return 230 - Math.min(160, Math.max(0, (Number(hh) || 0) / maxAlt * 160)); }
       var tickSvg = [0, .25, .5, .75, 1].map(function (frac) {
-        var yy = 140 - frac * 106, vv = maxAlt * frac;
+        var yy = 230 - frac * 160, vv = maxAlt * frac;
         return '<line x1="132" y1="' + yy.toFixed(1) + '" x2="148" y2="' + yy.toFixed(1) + '" stroke="var(--grafico-eje)" stroke-width="1.5"/><text x="124" y="' + (yy + 4).toFixed(1) + '" text-anchor="end" class="pictorico-texto">' + FIS.fmt(vv) + ' m</text>';
       }).join('');
-      axis = '<line x1="140" y1="145" x2="140" y2="29" stroke="var(--grafico-eje)" stroke-width="3" marker-end="url(#' + id + '-v)"/><line x1="108" y1="145" x2="560" y2="145" stroke="var(--grafico-grilla)" stroke-width="2"/>' + tickSvg + '<text x="106" y="163" class="pictorico-texto">piso / origen</text><text x="148" y="32" class="pictorico-texto">+Y</text><text x="111" y="92" class="pictorico-texto" transform="rotate(-90 111 92)">escala de altura</text>';
+      axis = '<line x1="140" y1="240" x2="140" y2="64" stroke="var(--grafico-eje)" stroke-width="3" marker-end="url(#' + id + '-v)"/><line x1="108" y1="240" x2="580" y2="240" stroke="var(--grafico-grilla)" stroke-width="2"/>' + tickSvg + '<text x="106" y="260" class="pictorico-texto">piso / origen</text><text x="148" y="67" class="pictorico-texto">+Y</text><text x="111" y="155" class="pictorico-texto" transform="rotate(-90 111 155)">escala de altura</text>';
       object = objs.map(function (ob, idx) {
-        var x = 220 + (idx % 2) * 18, y = yAltura(ob.altura), col = ob.color || (idx ? 'var(--alerta)' : 'var(--acento)');
-        return '<line x1="140" y1="' + y.toFixed(1) + '" x2="' + (x - 12) + '" y2="' + y.toFixed(1) + '" stroke="var(--grafico-grilla)" stroke-dasharray="4 4"/><circle cx="' + x + '" cy="' + y.toFixed(1) + '" r="7" fill="' + col + '" stroke="var(--fondo)" stroke-width="3"/><text x="' + (x + 18) + '" y="' + (y - 6).toFixed(1) + '" class="pictorico-texto">' + (ob.etiqueta || 'partícula') + '</text>' +
-          '<text x="' + (x + 18) + '" y="' + (y + 9).toFixed(1) + '" class="pictorico-texto">y = ' + FIS.fmt(ob.altura) + ' m</text>' +
+        var x = 230 + (idx % 3) * 24, y = yAltura(ob.altura), col = ob.color || (idx ? 'var(--alerta)' : 'var(--acento)');
+        return '<line x1="140" y1="' + y.toFixed(1) + '" x2="' + (x - 12) + '" y2="' + y.toFixed(1) + '" stroke="var(--grafico-grilla)" stroke-dasharray="4 4"/><circle cx="' + x + '" cy="' + y.toFixed(1) + '" r="7" fill="' + col + '" stroke="var(--fondo)" stroke-width="3"/><text x="' + (x + 18) + '" y="' + (y - 7).toFixed(1) + '" class="pictorico-texto">' + (ob.etiqueta || 'partícula') + '</text>' +
+          '<text x="' + (x + 18) + '" y="' + (y + 10).toFixed(1) + '" class="pictorico-texto">y = ' + FIS.fmt(ob.altura) + ' m</text>' +
           '<line x1="' + x + '" y1="' + (ob.vSign < 0 ? y - 16 : y + 16).toFixed(1) + '" x2="' + x + '" y2="' + (ob.vSign < 0 ? y + 30 : y - 30).toFixed(1) + '" stroke="' + col + '" stroke-width="2.5" marker-end="url(#' + id + '-v)"/>';
       }).join('');
       velocity = '';
-      acceleration = '<line x1="490" y1="64" x2="490" y2="124" stroke="var(--mal)" stroke-width="3" marker-end="url(#' + id + '-a)"/><text x="502" y="94" class="pictorico-texto">aᵧ = −g</text>';
+      acceleration = '<line x1="510" y1="112" x2="510" y2="190" stroke="var(--mal)" stroke-width="3" marker-end="url(#' + id + '-a)"/><text x="522" y="152" class="pictorico-texto">aᵧ = −g</text>';
       var datosClave = opciones.datosClave || [];
-      var datosSvg = datosClave.map(function (dato, di) { return '<text x="175" y="' + (184 + di * 14) + '" class="pictorico-texto">' + String(dato).replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</text>'; }).join('');
-      labels = '<text x="24" y="20" class="pictorico-texto">Marco: ' + marco + '</text><text x="300" y="20" class="pictorico-texto">' + eje + '</text>' + datosSvg;
+      var datosSvg = '<text x="210" y="20" class="pictorico-texto">Datos para modelizar:</text>' + datosClave.map(function (dato, di) { return '<text x="210" y="' + (38 + di * 16) + '" class="pictorico-texto">' + String(dato).replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</text>'; }).join('');
+      labels = '<text x="24" y="20" class="pictorico-texto">Marco: ' + marco + '</text><text x="24" y="40" class="pictorico-texto">' + eje + '</text>' + datosSvg;
     } else {
       var vx2 = vSign > 0 ? 410 : 190, ax2 = aSign > 0 ? 365 : 235;
       axis = '<line x1="48" y1="125" x2="575" y2="125" stroke="var(--grafico-eje)" stroke-width="2" marker-end="url(#' + id + '-v)"/><line x1="85" y1="118" x2="85" y2="132" stroke="var(--grafico-eje)"/><text x="78" y="149" class="pictorico-texto">origen</text>';
@@ -366,7 +366,7 @@
       acceleration = '<line x1="300" y1="51" x2="' + ax2 + '" y2="51" stroke="var(--mal)" stroke-width="3" marker-end="url(#' + id + '-a)"/><text x="' + ((300 + ax2) / 2) + '" y="39" text-anchor="middle" class="pictorico-texto">a(t)</text>';
       labels = '<text x="310" y="151" class="pictorico-texto">' + objeto + '</text><text x="48" y="22" class="pictorico-texto">Marco: ' + marco + '</text><text x="370" y="22" class="pictorico-texto">' + eje + '</text>';
     }
-    return '<div class="pictorico"><svg viewBox="0 0 620 ' + (vertical ? '210' : '170') + '" role="img" aria-label="' + (vertical ? 'Esquema pictórico sobre el eje Y vertical' : 'Esquema pictórico sobre el eje X horizontal') + '"><defs><marker id="' + id + '-v" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--acento)"/></marker><marker id="' + id + '-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--mal)"/></marker></defs>' + axis + object + velocity + acceleration + labels + '</svg><div class="pictorico-caption">' + String(rp || (vertical ? 'El esquema muestra el eje Y vertical, el piso como origen, los objetos ubicados sobre la misma vertical y los datos relevantes del enunciado.' : 'El esquema muestra el eje X horizontal y los vectores instantáneos.')) + '</div></div>';
+    return '<div class="pictorico"><svg viewBox="0 0 620 ' + (vertical ? '300' : '170') + '" width="' + (vertical ? '760' : '620') + '" height="' + (vertical ? '368' : '170') + '" role="img" aria-label="' + (vertical ? 'Esquema pictórico sobre el eje Y vertical' : 'Esquema pictórico sobre el eje X horizontal') + '"><defs><marker id="' + id + '-v" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--acento)"/></marker><marker id="' + id + '-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--mal)"/></marker></defs>' + axis + object + velocity + acceleration + labels + '</svg><div class="pictorico-caption">' + String(rp || (vertical ? 'El esquema muestra el eje Y vertical, el piso como origen, los objetos ubicados sobre la misma vertical y los datos relevantes del enunciado.' : 'El esquema muestra el eje X horizontal y los vectores instantáneos.')) + '</div></div>';
   };
   FIS.herramientas = function (oe, mr, sc, rp) {
     return FIS.paso('Herramientas metodológicas',
