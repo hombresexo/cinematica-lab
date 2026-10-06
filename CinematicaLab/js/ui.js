@@ -211,7 +211,8 @@
       '<span class="chip">◌ ' + c.pend + ' pendientes</span>' +
       '<span class="chip reloj' + (s.examen ? ' examen' : '') + '" id="reloj">' + (s.examen ? '00:00 restantes' : '00:00') + '</span>' +
       '</div>' +
-      '<button class="btn fantasma chico" id="btn-finalizar">' + (s.examen ? 'Entregar examen' : 'Finalizar y ver resultados') + '</button>' +
+      '<div class="acciones-sesion"><button class="btn fantasma chico" id="btn-inicio-sesion">← Inicio</button>' +
+      '<button class="btn fantasma chico" id="btn-finalizar">' + (s.examen ? 'Entregar examen' : 'Finalizar y ver resultados') + '</button></div>' +
       '</div>' +
       '<div class="layout-practica">' +
       '<nav class="indice" id="indice"></nav>' +
@@ -221,6 +222,7 @@
     renderIndice();
     renderItem();
 
+    $('#btn-inicio-sesion').onclick = function () { guardarProgreso(); renderInicio(); mostrarVista('vista-inicio'); };
     $('#btn-finalizar').onclick = function () { finalizar(); };
     $('#indice').onclick = function (e) {
       var b = e.target.closest('.indice-item');
@@ -296,7 +298,7 @@
         '<span class="dif">Dificultad ' + it.dif + '/3</span>' +
         '</header>' +
         '<div class="enunciado">' + it.contenido.enunciado + '</div>' +
-        '<div class="grafico-caja">' + FIS.diagramaPictorico(it.contenido.titulo, 'situación del enunciado', 'eje elegido', 'El esquema representa visualmente el objeto de estudio, el sentido positivo, la velocidad y la aceleración.') + '</div>' +
+        '<div class="grafico-caja">' + FIS.diagramaPictorico(it.contenido.titulo, 'situación del enunciado', it.genId.charAt(0) === 'V' ? 'eje y vertical, positivo hacia arriba' : 'eje x horizontal, positivo hacia la derecha', 'El esquema representa el eje físico del enunciado: en vertical la gravedad apunta hacia abajo; en horizontal las flechas siguen los signos del movimiento.', { orientacion: it.genId.charAt(0) === 'V' ? 'vertical' : 'horizontal', aSign: it.genId.charAt(0) === 'V' ? -1 : 1 }) + '</div>' +
         (it.contenido.grafico ? '<div class="grafico-caja">' + it.contenido.grafico + '</div>' : '') +
         (interSpec ? '<div id="explorador-interactivo">' + FIS.interactivoHTML(interSpec, interState.t, interState.modo) + '</div>' : '') +
         '<div class="incisos">' + incisos + '</div>' +
@@ -360,7 +362,7 @@
     html += '<div class="respuesta">' + entradaInciso(inc, respuesta) + '</div>';
     html += bloqueoExamen ? '<div class="mini aviso-examen">Modo examen: la corrección, las pistas y las respuestas se habilitan al entregar.</div>' :
       '<div class="acciones-inciso">' +
-        '<button class="btn chico" data-accion="verificar" data-id="' + inc.id + '">Verificar</button>' +
+        '<button class="btn chico verificar" data-accion="verificar" data-id="' + inc.id + '">Verificar</button>' +
         (inc.pistas && inc.pistas.length ? '<button class="btn chico fantasma" data-accion="pista" data-id="' + inc.id + '">Pista</button>' : '') +
         (inc.solucion ? '<button class="btn chico fantasma" data-accion="solucion" data-id="' + inc.id + '">Ver solución</button>' : '') +
         '<button class="btn chico fantasma" data-accion="respuesta" data-id="' + inc.id + '">Ver respuesta</button>' +
