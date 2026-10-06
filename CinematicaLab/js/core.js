@@ -1,3 +1,4 @@
+/* Cinemática Lab — esquema vertical sin leyendas descriptivas — v20261006-1938 */
 /* =========================================================================
    Cinemática Lab — núcleo del motor
    MRUV horizontal y movimientos verticales (UTN FRA · Seminario de Física)
