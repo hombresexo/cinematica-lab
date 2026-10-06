@@ -45,12 +45,13 @@
         { etiqueta: 'piedra', altura: d.h1, vSign: 1, color: 'var(--alerta)' }
       ];
       o.datosClave = ['h globo = ' + f(d.h0, 0) + ' m · v globo = +' + f(d.vb, 0) + ' m/s',
-        'h piedra = ' + f(d.h1) + ' m · v₀ piedra = +' + f(d.v0, 0) + ' m/s · g = ' + f(state.sesion && state.sesion.g) + ' m/s²'];
+        'h piedra = ' + f(d.h1) + ' m · v₀ piedra = +' + f(d.v0, 0) + ' m/s · g = ' + f(state.sesion && state.sesion.g) + ' m/s²',
+        't = 0: se lanza la piedra · encuentro si y_globo(t) = y_piedra(t)'];
     } else {
       var altura = d.H !== undefined ? d.H : (d.h0 !== undefined ? d.h0 : undefined);
       if (altura !== undefined) o.altura = altura;
-      if (d.v0 !== undefined) o.datosClave = ['y₀ = ' + f(altura === undefined ? 0 : altura, 0) + ' m · v₀ᵧ = ' + f(d.v0) + ' m/s · g = ' + f(state.sesion && state.sesion.g) + ' m/s²'];
-      else if (d.vB !== undefined) o.datosClave = ['y₀ = ' + f(altura === undefined ? 0 : altura, 0) + ' m · v₀ᵧ = ' + f(d.vB) + ' m/s · g = ' + f(state.sesion && state.sesion.g) + ' m/s²'];
+      if (d.v0 !== undefined) o.datosClave = ['y₀ = ' + f(altura === undefined ? 0 : altura, 0) + ' m · v₀ᵧ = ' + f(d.v0) + ' m/s · g = ' + f(state.sesion && state.sesion.g) + ' m/s²', 't = 0: inicio del movimiento · y(t) = y₀ + v₀ᵧt − 0.5gt²'];
+      else if (d.vB !== undefined) o.datosClave = ['y₀ = ' + f(altura === undefined ? 0 : altura, 0) + ' m · v₀ᵧ = ' + f(d.vB) + ' m/s · g = ' + f(state.sesion && state.sesion.g) + ' m/s²', 't = 0: se suelta el objeto · usar y(t) y v(t) con el mismo eje Y'];
     }
     return o;
   }

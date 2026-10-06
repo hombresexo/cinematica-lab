@@ -342,12 +342,16 @@
       for (oi = 0; oi < objs.length; oi++) maxAlt = Math.max(maxAlt, Number(objs[oi].altura) || 0);
       maxAlt = Math.max(maxAlt, 1);
       function yAltura(hh) { return 140 - Math.min(106, Math.max(0, (Number(hh) || 0) / maxAlt * 106)); }
-      axis = '<line x1="140" y1="145" x2="140" y2="29" stroke="var(--grafico-eje)" stroke-width="3" marker-end="url(#' + id + '-v)"/><line x1="108" y1="145" x2="560" y2="145" stroke="var(--grafico-grilla)" stroke-width="2"/><text x="106" y="163" class="pictorico-texto">piso / origen</text><text x="148" y="32" class="pictorico-texto">+Y</text><text x="111" y="92" class="pictorico-texto" transform="rotate(-90 111 92)">eje vertical</text>';
+      var tickSvg = [0, .25, .5, .75, 1].map(function (frac) {
+        var yy = 140 - frac * 106, vv = maxAlt * frac;
+        return '<line x1="132" y1="' + yy.toFixed(1) + '" x2="148" y2="' + yy.toFixed(1) + '" stroke="var(--grafico-eje)" stroke-width="1.5"/><text x="124" y="' + (yy + 4).toFixed(1) + '" text-anchor="end" class="pictorico-texto">' + FIS.fmt(vv) + ' m</text>';
+      }).join('');
+      axis = '<line x1="140" y1="145" x2="140" y2="29" stroke="var(--grafico-eje)" stroke-width="3" marker-end="url(#' + id + '-v)"/><line x1="108" y1="145" x2="560" y2="145" stroke="var(--grafico-grilla)" stroke-width="2"/>' + tickSvg + '<text x="106" y="163" class="pictorico-texto">piso / origen</text><text x="148" y="32" class="pictorico-texto">+Y</text><text x="111" y="92" class="pictorico-texto" transform="rotate(-90 111 92)">escala de altura</text>';
       object = objs.map(function (ob, idx) {
-        var x = 220 + idx * 145, y = yAltura(ob.altura), col = ob.color || (idx ? 'var(--alerta)' : 'var(--acento)');
-        return '<circle cx="' + x + '" cy="' + y.toFixed(1) + '" r="14" fill="' + col + '" fill-opacity=".18" stroke="' + col + '" stroke-width="3"/><text x="' + x + '" y="' + (y + 4).toFixed(1) + '" text-anchor="middle" class="pictorico-texto">' + (ob.etiqueta || 'OE') + '</text>' +
-          '<text x="' + (x + 20) + '" y="' + (y - 9).toFixed(1) + '" class="pictorico-texto">y = ' + FIS.fmt(ob.altura) + ' m</text>' +
-          '<line x1="' + x + '" y1="' + (ob.vSign < 0 ? y - 20 : y + 20).toFixed(1) + '" x2="' + x + '" y2="' + (ob.vSign < 0 ? y + 35 : y - 35).toFixed(1) + '" stroke="' + col + '" stroke-width="3" marker-end="url(#' + id + '-v)"/>';
+        var x = 220 + (idx % 2) * 18, y = yAltura(ob.altura), col = ob.color || (idx ? 'var(--alerta)' : 'var(--acento)');
+        return '<line x1="140" y1="' + y.toFixed(1) + '" x2="' + (x - 12) + '" y2="' + y.toFixed(1) + '" stroke="var(--grafico-grilla)" stroke-dasharray="4 4"/><circle cx="' + x + '" cy="' + y.toFixed(1) + '" r="7" fill="' + col + '" stroke="var(--fondo)" stroke-width="3"/><text x="' + (x + 18) + '" y="' + (y - 6).toFixed(1) + '" class="pictorico-texto">' + (ob.etiqueta || 'partícula') + '</text>' +
+          '<text x="' + (x + 18) + '" y="' + (y + 9).toFixed(1) + '" class="pictorico-texto">y = ' + FIS.fmt(ob.altura) + ' m</text>' +
+          '<line x1="' + x + '" y1="' + (ob.vSign < 0 ? y - 16 : y + 16).toFixed(1) + '" x2="' + x + '" y2="' + (ob.vSign < 0 ? y + 30 : y - 30).toFixed(1) + '" stroke="' + col + '" stroke-width="2.5" marker-end="url(#' + id + '-v)"/>';
       }).join('');
       velocity = '';
       acceleration = '<line x1="490" y1="64" x2="490" y2="124" stroke="var(--mal)" stroke-width="3" marker-end="url(#' + id + '-a)"/><text x="502" y="94" class="pictorico-texto">aᵧ = −g</text>';
